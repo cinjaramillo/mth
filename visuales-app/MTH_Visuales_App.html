@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visuales de Mensaje — Monte Horeb</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;700;900&family=Montserrat:wght@300;400;700;900&family=Lato:wght@300;400;700&family=Oswald:wght@300;400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:            #f2f2f7;
+  --sidebar:       #ffffff;
+  --card:          #ffffff;
+  --surface:       #f2f2f7;
+  --surface2:      #e5e5ea;
+  --surface3:      #d8d8dd;
+  --border:        rgba(0,0,0,0.07);
+  --border2:       rgba(0,0,0,0.12);
+  --text:          #1c1c1e;
+  --text2:         #3a3a3c;
+  --muted:         #6c6c70;
+  --muted2:        #aeaeb2;
+  --accent:        #1c1c1e;
+  --accent-text:   #ffffff;
+  --accent-light:  rgba(0,0,0,0.05);
+  --accent-border: rgba(0,0,0,0.14);
+  --focus:         #0077ed;
+  --focus-ring:    rgba(0,119,237,0.14);
+  --red:           #ff3b30;
+  --r:             10px;
+  --r-sm:          7px;
+  --sh-xs: none;
+  --sh-sm: none;
+  --sh:    none;
+  --sh-md: none;
+}
+
+html.dark {
+  --bg:            #111111;
+  --sidebar:       #1c1c1e;
+  --card:          #2c2c2e;
+  --surface:       #1c1c1e;
+  --surface2:      #2c2c2e;
+  --surface3:      #3a3a3c;
+  --border:        rgba(255,255,255,0.07);
+  --border2:       rgba(255,255,255,0.12);
+  --text:          #f5f5f7;
+  --text2:         #d1d1d6;
+  --muted:         #8e8e93;
+  --muted2:        #48484a;
+  --accent:        #f5f5f7;
+  --accent-text:   #111111;
+  --accent-light:  rgba(255,255,255,0.07);
+  --accent-border: rgba(255,255,255,0.15);
+  --focus:         #0a84ff;
+  --focus-ring:    rgba(10,132,255,0.18);
+  --sh-xs: none;
+  --sh-sm: none;
+  --sh:    none;
+  --sh-md: none;
+}
+
+/* Theme toggle */
+.theme-btn {
+  background: none; border: none;
+  border-radius: 8px; cursor: pointer; padding: 6px;
+  color: var(--muted2); line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.15s, background 0.15s; flex-shrink: 0;
+}
+.theme-btn:hover { color: var(--text); background: var(--surface2); }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── LAYOUT ─── */
+.layout { display: grid; grid-template-columns: 296px 1fr; min-height: 100vh; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px 32px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+/* ─── HEADER ─── */
+.logo-header {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px; position: relative; gap: 4px;
+}
+.logo-header-top {
+  position: absolute; top: 14px; right: 14px;
+}
+.logo-icon-wrap {
+  width: 64px; height: 52px; border-radius: 0;
+  background: none;
+  display: flex; align-items: flex-end; justify-content: center;
+  margin-bottom: -6px;
+}
+.logo-icon-wrap svg { width: 48px; height: 48px; fill: var(--text); }
+.logo-header h1 {
+  font-size: 16px; font-weight: 700;
+  letter-spacing: -0.03em; color: var(--text); text-align: center;
+}
+.logo-header-sub {
+  font-size: 11px; color: var(--muted2); letter-spacing: 0.02em;
+  text-transform: uppercase; margin-top: -4px;
+}
+
+/* ─── SEGMENTED TABS ─── */
+.tabs {
+  display: flex; gap: 2px;
+  background: var(--surface2);
+  padding: 3px; border-radius: 10px;
+}
+.tab {
+  flex: 1; padding: 7px 4px;
+  text-align: center; font-size: 12px; font-weight: 500;
+  letter-spacing: -0.01em; border-radius: 8px;
+  cursor: pointer; color: var(--muted);
+  transition: all 0.18s; border: none; background: none;
+  font-family: inherit; position: relative;
+}
+.tab.active {
+  background: var(--card);
+  color: var(--text); font-weight: 600;
+}
+/* Color dot under active tab for quick identification */
+.tab.active::after {
+  content: '';
+  position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%;
+}
+.tab.active[data-tab="versiculo"]::after { background: #0071e3; }
+.tab.active[data-tab="logo"]::after      { background: #1a9050; }
+
+/* ─── SECTION HEADERS ─── */
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none; padding: 7px 0;
+  transition: opacity 0.1s;
+}
+.section-header:hover { opacity: 0.65; }
+.section-header-left {
+  display: flex; align-items: center; gap: 0;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--muted);
+}
+.section-chevron {
+  color: var(--muted2);
+  transition: transform 0.22s cubic-bezier(.4,0,.2,1);
+  flex-shrink: 0; margin-left: 6px; line-height: 1;
+  font-size: 0; /* hide old text chevron */
+  width: 14px; height: 14px; display: flex; align-items: center; justify-content: center;
+}
+.section-chevron::after {
+  content: '';
+  display: block;
+  width: 8px; height: 8px;
+  border-right: 1.5px solid var(--muted2);
+  border-bottom: 1.5px solid var(--muted2);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 0.22s cubic-bezier(.4,0,.2,1);
+}
+.section-chevron.open::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* Upload zone */
+.upload-zone {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 16px 12px;
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--muted); font-size: 12px;
+  cursor: pointer; text-align: center;
+  transition: all 0.15s; font-family: inherit;
+}
+.upload-zone:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.upload-zone input { display: none; }
+.upload-zone svg { flex-shrink: 0; margin-bottom: 2px; }
+.upload-zone .uz-main {
+  font-size: 12px; font-weight: 500;
+  color: var(--text2);
+}
+.upload-zone .uz-sub { font-size: 11px; color: var(--muted); }
+.upload-zone.has-file {
+  border-style: solid;
+  border-color: var(--accent-border);
+  background: var(--accent-light);
+}
+.upload-zone.has-file .uz-main { color: var(--accent); }
+
+/* Drag-over highlight per zone */
+.upload-zone.drag-highlight {
+  border-color: var(--focus) !important;
+  border-style: dashed !important;
+  background: var(--focus-ring) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  transform: scale(1.01);
+}
+.upload-zone.drag-highlight .uz-main,
+.upload-zone.drag-highlight .uz-sub {
+  color: var(--focus) !important;
+}
+
+/* Fields */
+.field { margin-bottom: 8px; }
+.field label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; font-weight: 500; color: var(--muted);
+  margin-bottom: 5px;
+}
+.field label span { font-size: 11px; color: var(--accent); font-weight: 600; }
+
+.field input[type=text],
+.field input[type=number],
+.field select,
+.field textarea {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  color: var(--text);
+  font-size: 12px; font-family: inherit;
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  box-shadow: var(--sh-xs);
+  appearance: none; -webkit-appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236c6c70'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  background-color: var(--card);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  outline: none;
+}
+.field textarea {
+  resize: vertical; min-height: 64px; line-height: 1.6;
+}
+.field input[type=color] {
+  width: 32px; height: 30px; padding: 2px;
+  border-radius: var(--r-sm); cursor: pointer;
+  background: var(--card); border: 1px solid var(--border2);
+  box-shadow: var(--sh-xs);
+}
+
+input[type=range] {
+  width: 100%; cursor: pointer;
+  accent-color: var(--accent);
+  height: 3px;
+}
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Font row */
+.font-row { display: flex; gap: 6px; align-items: flex-end; }
+.font-row .field { flex: 1; margin-bottom: 0; }
+.font-upload-btn {
+  flex-shrink: 0; padding: 0 11px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--muted); font-size: 11px;
+  font-weight: 500; cursor: pointer; white-space: nowrap;
+  font-family: inherit; transition: all 0.12s;
+  height: 32px; display: flex; align-items: center; gap: 3px;
+  box-shadow: var(--sh-xs);
+}
+.font-upload-btn:hover {
+  border-color: var(--accent); color: var(--accent);
+  background: var(--accent-light);
+}
+.font-upload-btn input { display: none; }
+.custom-font-tag {
+  font-size: 10px; color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  border-radius: 5px; padding: 2px 8px; margin-top: 4px; display: none;
+}
+
+/* Tab pill */
+.tab-pill {
+  display: inline-flex; align-items: center;
+  font-size: 9px; padding: 2px 7px;
+  border-radius: 20px; font-weight: 600;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  margin-left: 7px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.pill-v { opacity: 0.9; }
+.pill-l { opacity: 1; }
+
+/* Color + hex */
+.color-hex-pair { display: flex; align-items: center; gap: 7px; }
+.color-hex-pair input[type=color] {
+  width: 32px; height: 32px; padding: 2px;
+  border-radius: var(--r-sm); cursor: pointer;
+  background: var(--card); border: 1px solid var(--border2);
+  box-shadow: var(--sh-xs); flex-shrink: 0;
+}
+.color-hex-pair input[type=text] {
+  flex: 1; background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); padding: 5px 9px; color: var(--text);
+  font-size: 11px; font-family: 'Menlo', 'SF Mono', monospace;
+  outline: none; height: 32px; letter-spacing: 0.04em;
+  box-shadow: var(--sh-xs);
+}
+.color-hex-pair input[type=text]:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Overlay items */
+.overlay-list { display: flex; flex-direction: column; gap: 6px; }
+.overlay-item {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--sh-xs);
+}
+.overlay-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 12px; cursor: pointer; user-select: none;
+  transition: background 0.1s;
+}
+.overlay-header:hover { background: var(--surface); }
+.overlay-header-left { display: flex; align-items: center; gap: 8px; }
+.overlay-type-badge {
+  font-size: 9px; padding: 2px 7px; border-radius: 20px;
+  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.badge-svg {
+  background: var(--accent-light); color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.badge-png {
+  background: var(--surface2); color: var(--muted);
+  border: 1px solid var(--border2);
+}
+.overlay-name {
+  font-size: 11px; color: var(--text2);
+  font-family: 'Menlo','SF Mono',monospace;
+  max-width: 148px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.overlay-header-right { display: flex; align-items: center; gap: 6px; }
+.overlay-remove {
+  background: none; border: none; color: var(--muted2);
+  cursor: pointer; font-size: 16px; padding: 2px; line-height: 1;
+  border-radius: 4px; transition: all 0.1s;
+}
+.overlay-remove:hover { color: var(--red); background: rgba(255,59,48,0.08); }
+.overlay-chevron { font-size: 10px; color: var(--muted2); transition: transform 0.18s; }
+.overlay-chevron.open { transform: rotate(180deg); }
+.overlay-body {
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.overlay-transform {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 9px;
+}
+.ot-field label {
+  font-size: 10px; font-weight: 500; color: var(--muted);
+  display: block; margin-bottom: 4px;
+}
+.ot-field input[type=range] { width: 100%; }
+.ot-field input[type=number] {
+  width: 100%; background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm); padding: 5px 8px;
+  color: var(--text); font-size: 11px; font-family: inherit;
+  outline: none; box-shadow: var(--sh-xs);
+}
+.ot-val { font-size: 10px; color: var(--accent); font-weight: 600; margin-left: 4px; }
+.overlay-zone-row { display: flex; gap: 5px; margin-bottom: 9px; }
+.oz-btn {
+  font-size: 11px; padding: 4px 11px; border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: var(--card); color: var(--muted);
+  cursor: pointer; font-family: inherit;
+  font-weight: 500; transition: all 0.12s;
+  box-shadow: var(--sh-xs);
+}
+.oz-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent-border);
+  color: var(--accent); font-weight: 600;
+}
+.svg-colors { border-top: 1px solid var(--border); padding-top: 9px; }
+.svg-colors-title {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.color-layer-list { display: flex; flex-direction: column; gap: 7px; }
+.color-layer { display: flex; align-items: center; gap: 9px; }
+.color-layer-swatch {
+  width: 20px; height: 20px; border-radius: 5px;
+  border: 1px solid var(--border2); flex-shrink: 0;
+  box-shadow: var(--sh-xs);
+}
+.color-layer-info { flex: 1; min-width: 0; }
+.color-layer-label {
+  font-size: 10px; color: var(--text2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: 'Menlo','SF Mono',monospace;
+}
+.color-layer-count { font-size: 9px; color: var(--muted); margin-top: 1px; }
+.color-layer input[type=color] {
+  width: 26px; height: 24px; padding: 1px;
+  border-radius: 5px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+.apply-all-btn {
+  font-size: 11px; padding: 6px 11px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--muted);
+  cursor: pointer; font-family: inherit; font-weight: 500;
+  margin-top: 8px; transition: all 0.12s; box-shadow: var(--sh-xs);
+}
+.apply-all-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent); background: var(--accent-light);
+}
+
+/* Export button */
+.export-btn {
+  width: 100%; padding: 11px 16px;
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: var(--r);
+  font-size: 13px; font-weight: 600;
+  font-family: inherit; letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+.export-btn:hover { opacity: 0.82; transform: translateY(-1px); }
+.export-btn:active { transform: scale(0.98); }
+.export-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* ─── MAIN ─── */
+.main { padding: 32px 28px; overflow-y: auto; background: var(--bg); }
+
+/* Welcome */
+.welcome { max-width: 480px; margin: 40px auto; text-align: center; }
+.welcome-icon { font-size: 44px; margin-bottom: 20px; line-height: 1; }
+.welcome h2 {
+  font-size: 22px; font-weight: 700;
+  letter-spacing: -0.03em; color: var(--text);
+  margin-bottom: 8px;
+}
+.welcome p {
+  font-size: 13px; color: var(--muted);
+  line-height: 1.65; margin-bottom: 24px;
+}
+.steps {
+  text-align: left; background: var(--card);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 22px; margin-bottom: 16px;
+  box-shadow: var(--sh);
+}
+.step {
+  display: flex; gap: 13px; align-items: flex-start;
+  margin-bottom: 14px;
+}
+.step:last-child { margin-bottom: 0; }
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent-light); border: 1.5px solid var(--accent-border);
+  color: var(--accent); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text strong {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--text); margin-bottom: 2px; letter-spacing: -0.01em;
+}
+.step-text span { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.tips {
+  background: var(--accent-light); border: 1px solid var(--accent-border);
+  border-radius: 12px; padding: 14px 16px; text-align: left;
+}
+.tips-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.tip {
+  font-size: 12px; color: var(--text2); line-height: 1.6;
+  padding-left: 14px; position: relative; margin-bottom: 4px;
+}
+.tip::before {
+  content: '·'; position: absolute; left: 4px;
+  color: var(--accent); font-size: 16px; top: -2px;
+}
+
+/* Preview */
+.preview-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.preview-strip {
+  display: flex; gap: 3px; width: 100%; margin-bottom: 28px;
+}
+.preview-wrap {
+  position: relative; overflow: hidden;
+  border-radius: 6px; border: 1px solid var(--border);
+}
+.preview-wrap canvas { display: block; width: 100%; height: auto; image-rendering: -webkit-optimize-contrast; }
+.zone-tag {
+  position: absolute; top: 6px; left: 6px; font-size: 9px;
+  background: rgba(0,0,0,0.38); backdrop-filter: blur(8px) saturate(1.5);
+  -webkit-backdrop-filter: blur(8px) saturate(1.5);
+  color: rgba(255,255,255,0.9);
+  padding: 3px 8px; border-radius: 20px;
+  pointer-events: none;
+  font-family: 'Menlo','SF Mono',monospace;
+  letter-spacing: 0.04em;
+}
+
+/* Results */
+.results { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.result-chip {
+  border: 1px solid var(--border); border-radius: var(--r);
+  overflow: hidden; background: var(--card);
+  box-shadow: var(--sh-sm);
+}
+.result-chip canvas { width: 100%; display: block; }
+.result-chip-footer {
+  padding: 8px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.result-chip-footer span {
+  font-size: 10px; color: var(--muted);
+  font-family: 'Menlo','SF Mono',monospace; line-height: 1.4;
+}
+.result-chip-footer a {
+  font-size: 11px; font-weight: 600;
+  color: var(--focus); text-decoration: none;
+  padding: 3px 9px;
+  background: rgba(0,119,237,0.08);
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.result-chip-footer a:hover { background: rgba(0,119,237,0.16); }
+/* ─── COLLAPSIBLE SECTIONS ─── */
+.section-body {
+  overflow: hidden;
+  transition: max-height 0.28s cubic-bezier(.4,0,.2,1), opacity 0.2s ease;
+  max-height: 2000px; opacity: 1;
+}
+.section-body.collapsed { max-height: 0 !important; opacity: 0; pointer-events: none; }
+.tab-pill {
+  display: inline-flex; align-items: center;
+  font-size: 9px; padding: 2px 7px; border-radius: 20px;
+  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-left: 7px;
+  border: none;
+}
+.pill-v { background: rgba(0,113,227,0.08); color: #0071e3; }
+.pill-l { background: rgba(30,160,80,0.09); color: #1a9050; }
+
+/* ─── TAB PILLS ─── */
+
+/* ─── ZOOM CONTROL ─── */
+.zoom-control {
+  display: inline-flex; align-items: center;
+  background: var(--surface2); border-radius: 12px;
+  border: 1px solid var(--border); overflow: hidden; flex-shrink: 0;
+}
+.zoom-btn {
+  background: none; border: none; cursor: pointer;
+  width: 38px; height: 34px; font-size: 19px; font-weight: 300; line-height: 1;
+  color: var(--text2); display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s; font-family: inherit; flex-shrink: 0;
+}
+.zoom-btn:hover { background: rgba(0,0,0,0.05); }
+.zoom-btn:active { background: rgba(0,0,0,0.09); }
+.zoom-val {
+  font-size: 12px; font-weight: 500; color: var(--text2); letter-spacing: -0.01em;
+  min-width: 44px; text-align: center;
+  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+  height: 34px; display: flex; align-items: center; justify-content: center;
+}
+.zoom-fit-btn {
+  background: none; border: none; cursor: pointer; border-left: 1px solid var(--border);
+  width: 34px; height: 34px; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s, color 0.1s;
+}
+.zoom-fit-btn:hover { background: rgba(0,0,0,0.05); color: var(--text); }
+.zoom-fullscreen-btn { display: none; }
+
+/* ─── ICON SELECTOR CHIPS ─── */
+.icon-selector { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+.icon-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--card);
+  cursor: pointer; font-size: 11px; font-weight: 500;
+  color: var(--muted2); transition: all 0.12s;
+  box-shadow: var(--sh-xs); font-family: inherit;
+}
+.icon-chip svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.icon-chip:hover { border-color: var(--accent); color: var(--text); }
+.icon-chip.active { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+
+.preview-info-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 11px; color: var(--muted); margin-bottom: 10px;
+}
+.preview-info-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; flex-shrink: 0; }
+.dot-v { background: var(--text); }
+.dot-l { background: var(--text); }
+.preview-info-sep { color: var(--muted2); margin: 0 2px; }
+</style>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo-header">
+    <div class="logo-header-top">
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Cambiar tema">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="logo-icon-wrap">
+      <svg viewBox="0 0 612 596.35" xmlns="http://www.w3.org/2000/svg">
+        <path d="M307.97,107.9c2.71,1.73,5.93,1.98,8.88,3.03,19.67,7.02,34.92,19.71,47.15,36.33,10.44,14.18,18.12,29.81,24.51,46.16,3,7.67,5.39,15.53,8.1,23.29,1.08,3.09.62,5.27-1.85,7.59-6.64,6.21-14.38,10.69-22.3,14.91-6.62,3.52-13.3,7.02-20.36,9.48-10.4,3.63-15.43,11.58-18.36,21.36-1.85,6.19-3.31,12.49-3.61,19.02-.12,2.58-.94,2.94-3.49,1.97-5.36-2.06-9.76-5.64-14.17-9.14-4.1-3.25-8.26-3.68-12.91-1.43-3.35,1.62-6.31,3.85-9.49,5.73-.61.36-1.37.76-1.14,1.7.18.74.88.9,1.49,1.08,1.24.37,2.46.85,3.73,1.04,7.3,1.13,10.68,4.54,11.71,13.18.63,5.33,1.53,10.57,3.67,15.58,3.56,8.32,10.17,12.91,18.42,15.61,4.7,1.54,9.59,2.09,14.49,2.17,9.53.14,19.07.18,28.6-.06,4.85-.12,7.89,2.6,10.92,5.62,1.15,1.14.18,1.99-.57,2.82-4.32,4.82-8.59,9.67-12.96,14.45-8.11,8.88-16.14,17.83-23.81,27.09-2.36,2.85-2.42,2.79-4.82,0-8.31-9.65-18.06-17.76-27.79-25.88-9.06-7.57-17.26-15.89-24-25.64-2.67-3.87-5.6-7.54-7.97-11.64-5-8.67-8.3-17.93-9.92-27.77-1.86-11.28-2.37-22.63-1.04-34,1.05-9.03,3.36-17.79,6.06-26.46,5.09-16.34,11.86-32.09,16.84-48.46,2.26-7.44,4.11-14.97,5.29-22.66.13-.87.02-2.18,1.06-2.33,1.06-.15,1.27,1.17,1.69,1.94,5.29,9.75,10.81,19.39,14.03,30.12,2.24,7.49,2.74,15.06,1.29,22.75-.12.62-.21,1.24-.04,2.05,3.57-2.75,6.56-6.03,9.1-9.7,9.4-13.58,10.9-28.54,7.55-44.32-3.4-15.99-10.72-30.24-19.27-43.98-2.63-4.23-5.89-8.05-8.03-12.59h3.33Z"/>
+        <path d="M106.46,450.87c-.78-7.27-.8-13.86.2-20.42,2.78-18.13,10.47-34.12,22.24-47.97,15.29-17.99,34.47-30.29,57.18-37,16.24-4.8,32.88-6.38,49.67-5.31,15.61,1,29.92,6.46,43,15.01,10.11,6.61,19.06,14.61,27.51,23.2,11.67,11.87,22.61,24.46,35.38,35.22,9.88,8.33,20.25,15.86,32.67,20,17.09,5.69,34.54,7.82,52.51,5.51,12.91-1.66,25.35-5,36.42-11.81,18.96-11.65,34.97-26.16,42.16-48.23.08-.24.25-.46.7-1.27-.23,4.87-1.25,8.95-2.59,12.91-6.19,18.37-17.9,32.76-32.75,44.82-9.02,7.33-18.94,13.24-29.59,17.85-11.49,4.97-23.4,8.5-35.87,10.25-13.76,1.92-27.29,1.39-40.68-2.33-9.78-2.72-18.89-6.93-27.46-12.36-10.02-6.36-19.34-13.63-28.05-21.68-10.25-9.47-20.35-19.11-30.74-28.43-10.74-9.64-21.9-18.78-34.42-26.12-6.24-3.66-13.23-4.74-20.16-5.64-9.57-1.24-19.23-1.14-28.74.63-11.62,2.17-22.58,6.34-33,11.92-12.19,6.53-23.01,14.86-31.97,25.38-9.37,11-16.62,23.25-20.68,37.27-.77,2.66-1.18,5.51-2.96,8.58Z"/>
+        <path d="M358.07,275.37c1-6.36,4.11-11.19,9.67-14.31,3.87-2.17,7.9-4.15,12.42-4.53,10.29-.85,22.15-15.15,22.71-25.4.14-2.6.29-5.13-.16-7.72-.76-4.4-.43-8.86-.36-13.29.16-9.53.28-19.04-2.34-28.37-1.12-3.99-2.93-7.7-4.57-12.08,2.95,1.58,4.05,4.11,5.67,6.11,9.84,12.09,18.58,24.93,24.49,39.41,9.52,23.33,7.71,46.42-2.42,69.12-5.83,13.07-13.5,25.03-21.98,36.53-1.79,2.43-3.49,2.81-6.35,1.8-6.17-2.2-12.51-3.93-18.78-5.85-.53-.16-1.1-.23-1.59-.47-.8-.38-2.04-.46-2.08-1.55-.03-.9,1.08-1.15,1.77-1.58,6.05-3.75,11.07-8.52,14.94-14.55,6.08-9.46,14.51-16.35,24.07-22.11,8.78-5.29,14.65-12.87,16.54-23.19.07-.36.19-.72.21-1.09.05-.81.47-1.86-.22-2.37-.72-.54-1.58.22-2.27.61-3.71,2.09-7.5,4.02-11.41,5.7-9.27,3.99-18.94,4.89-28.81,3.24-11.73-1.95-22.89,3.09-28.09,15.21-.14.33-.24.73-1.06.72Z"/>
+      </svg>
+    </div>
+    <h1>Visuales de Mensaje</h1>
+    <span class="logo-header-sub">Monte Horeb Internacional</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="versiculo" onclick="setTab('versiculo')">Versículo</button>
+    <button class="tab" data-tab="logo" onclick="setTab('logo')">Logo</button>
+  </div>
+
+  <!-- 1. BACKGROUND -->
+  <div class="collapsible-section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">1. Fondo</span>
+      <span class="section-chevron open">▼</span>
+    </div>
+    <div class="section-body">
+      <label class="upload-zone" id="bg-zone">
+        <input type="file" id="bg-input" accept="image/*" onchange="loadBg(this)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);margin-bottom:2px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span class="uz-main">Subir fondo</span>
+        <span class="uz-sub">PNG, JPG, WEBP — 1800 × 600</span>
+      </label>
+      <div id="bg-crop-controls" style="display:none; margin-top:8px;">
+        <div class="field">
+          <label>Escala del fondo <span id="bg-scale-val">100%</span></label>
+          <input type="range" id="bg-scale" min="50" max="200" value="100" step="1"
+            oninput="document.getElementById('bg-scale-val').textContent=this.value+'%';render()">
+        </div>
+        <div class="field">
+          <label>Posición vertical <span id="bg-vy-val">50%</span></label>
+          <input type="range" id="bg-vy" min="0" max="100" value="50" step="1"
+            oninput="document.getElementById('bg-vy-val').textContent=this.value+'%';render()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 2. TÍTULO -->
+  <div class="collapsible-section" id="title-section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">
+        2. Título
+        <span class="tab-pill pill-v" id="title-tab-pill">Versículo</span>
+      </span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <div class="field">
+        <label>Líneas <span style="font-size:10px;color:var(--muted);font-weight:400">usa / para separar</span></label>
+        <textarea id="title-lines" rows="3" placeholder="Título del sermón /de este domingo /en tres líneas&#10;&#10;O solo dos líneas /así de simple" oninput="saveAndRender()" style="width:100%;background:var(--card);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;color:var(--text);font-size:12px;font-family:inherit;outline:none;resize:vertical;min-height:64px;line-height:1.6;box-shadow:var(--sh-xs);transition:border-color 0.12s,box-shadow 0.12s"></textarea>
+        <div style="font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5">Separa con <code style="background:var(--surface2);border:1px solid var(--border2);padding:1px 5px;border-radius:4px;font-size:10px;font-family:Menlo,monospace">/</code> — impares usan fuente principal, pares la secundaria.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 3. TIPOGRAFÍA -->
+  <div class="collapsible-section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">
+        3. Tipografía
+        <span class="tab-pill pill-v" id="typo-tab-pill">Versículo</span>
+      </span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <div class="field">
+        <label>Fuente principal (líneas impares)</label>
+        <div class="font-row">
+          <div class="field" style="margin-bottom:0;flex:1">
+            <select id="font-display" onchange="saveAndRender()">
+              <option value="" disabled selected>— Seleccionar —</option>
+              <option value="'Cinzel', serif">Cinzel</option>
+              <option value="'Playfair Display', serif">Playfair Display</option>
+              <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+              <option value="'EB Garamond', serif">EB Garamond</option>
+              <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+              <option value="'Raleway', sans-serif">Raleway</option>
+              <option value="'Montserrat', sans-serif">Montserrat</option>
+              <option value="'Lato', sans-serif">Lato</option>
+              <option value="'Oswald', sans-serif">Oswald</option>
+              <option value="'Dancing Script', cursive">Dancing Script</option>
+              <option value="'Great Vibes', cursive">Great Vibes</option>
+            </select>
+          </div>
+          <label class="font-upload-btn"><input type="file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont(this,'display')">＋ fuente</label>
+        </div>
+        <div class="custom-font-tag" id="custom-font-display-tag"></div>
+      </div>
+      <div class="field">
+        <label>Fuente secundaria (líneas pares)</label>
+        <div class="font-row">
+          <div class="field" style="margin-bottom:0;flex:1">
+            <select id="font-sub" onchange="saveAndRender()">
+              <option value="" disabled selected>— Seleccionar —</option>
+              <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+              <option value="'Raleway', sans-serif">Raleway</option>
+              <option value="'Montserrat', sans-serif">Montserrat</option>
+              <option value="'Lato', sans-serif">Lato</option>
+              <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+              <option value="'Cinzel', serif">Cinzel</option>
+            </select>
+          </div>
+          <label class="font-upload-btn"><input type="file" accept=".ttf,.otf,.woff,.woff2" onchange="loadCustomFont(this,'sub')">＋ fuente</label>
+        </div>
+        <div class="custom-font-tag" id="custom-font-sub-tag"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Tamaño principal (px)</label><input type="number" id="fs-display" placeholder="72" min="20" max="300" oninput="saveAndRender()"></div>
+        <div class="field"><label>Tamaño secundaria (px)</label><input type="number" id="fs-sub" placeholder="28" min="10" max="120" oninput="saveAndRender()"></div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Peso principal</label>
+          <select id="fw-display" onchange="saveAndRender()">
+            <option value="" disabled selected>—</option>
+            <option value="300">Light</option><option value="400">Regular</option>
+            <option value="700">Bold</option><option value="900">Black</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estilo principal</label>
+          <select id="fstyle-display" onchange="saveAndRender()">
+            <option value="normal" selected>Normal</option><option value="italic">Italic</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Peso secundaria</label>
+          <select id="fw-sub" onchange="saveAndRender()">
+            <option value="" disabled selected>—</option>
+            <option value="300">Light</option><option value="400">Regular</option>
+            <option value="700">Bold</option><option value="900">Black</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estilo secundaria</label>
+          <select id="fstyle-sub" onchange="saveAndRender()">
+            <option value="normal" selected>Normal</option><option value="italic">Italic</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Color texto</label>
+          <div class="color-hex-pair">
+            <input type="color" id="text-color" value="#ffffff" oninput="syncHex('text-color','text-color-hex');saveAndRender()">
+            <input type="text" id="text-color-hex" value="#ffffff" maxlength="7" placeholder="#ffffff" oninput="syncColor('text-color-hex','text-color');saveAndRender()">
+          </div>
+        </div>
+        <div class="field">
+          <label>Alineación</label>
+          <select id="text-align" onchange="saveAndRender()">
+            <option value="center" selected>Centro</option>
+            <option value="left">Izquierda</option><option value="right">Derecha</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 4. COMPOSICIÓN -->
+  <div class="collapsible-section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">4. Composición</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <div class="field"><label>Posición vertical <span id="vy-val">50%</span></label><input type="range" id="text-vy" min="5" max="95" value="50" oninput="document.getElementById('vy-val').textContent=this.value+'%';saveAndRender()"></div>
+      <div class="field"><label>Margen lateral <span id="mx-val">40px</span></label><input type="range" id="text-mx" min="10" max="150" value="40" oninput="document.getElementById('mx-val').textContent=this.value+'px';saveAndRender()"></div>
+      <div class="field"><label>Interlineado <span id="lh-val">1.15</span></label><input type="range" id="line-height" min="0.7" max="2.5" step="0.05" value="1.15" oninput="document.getElementById('lh-val').textContent=(+this.value).toFixed(2);saveAndRender()"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 5. ÍCONO LATERAL (Versículo) -->
+  <div class="collapsible-section" id="panel-versiculo">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">5. Ícono lateral</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Llama en paneles laterales</div>
+      <!-- Icon type selector -->
+      <div class="icon-selector" id="icon-type-selector">
+        <button class="icon-chip active" data-icon="mth" onclick="setIconType('mth')">
+          <svg viewBox="0 0 612 596.35" xmlns="http://www.w3.org/2000/svg"><path d="M307.97,107.9c2.71,1.73,5.93,1.98,8.88,3.03,19.67,7.02,34.92,19.71,47.15,36.33,10.44,14.18,18.12,29.81,24.51,46.16,3,7.67,5.39,15.53,8.1,23.29,1.08,3.09.62,5.27-1.85,7.59-6.64,6.21-14.38,10.69-22.3,14.91-6.62,3.52-13.3,7.02-20.36,9.48-10.4,3.63-15.43,11.58-18.36,21.36-1.85,6.19-3.31,12.49-3.61,19.02-.12,2.58-.94,2.94-3.49,1.97-5.36-2.06-9.76-5.64-14.17-9.14-4.1-3.25-8.26-3.68-12.91-1.43-3.35,1.62-6.31,3.85-9.49,5.73-.61.36-1.37.76-1.14,1.7.18.74.88.9,1.49,1.08,1.24.37,2.46.85,3.73,1.04,7.3,1.13,10.68,4.54,11.71,13.18.63,5.33,1.53,10.57,3.67,15.58,3.56,8.32,10.17,12.91,18.42,15.61,4.7,1.54,9.59,2.09,14.49,2.17,9.53.14,19.07.18,28.6-.06,4.85-.12,7.89,2.6,10.92,5.62,1.15,1.14.18,1.99-.57,2.82-4.32,4.82-8.59,9.67-12.96,14.45-8.11,8.88-16.14,17.83-23.81,27.09-2.36,2.85-2.42,2.79-4.82,0-8.31-9.65-18.06-17.76-27.79-25.88-9.06-7.57-17.26-15.89-24-25.64-2.67-3.87-5.6-7.54-7.97-11.64-5-8.67-8.3-17.93-9.92-27.77-1.86-11.28-2.37-22.63-1.04-34,1.05-9.03,3.36-17.79,6.06-26.46,5.09-16.34,11.86-32.09,16.84-48.46,2.26-7.44,4.11-14.97,5.29-22.66.13-.87.02-2.18,1.06-2.33,1.06-.15,1.27,1.17,1.69,1.94,5.29,9.75,10.81,19.39,14.03,30.12,2.24,7.49,2.74,15.06,1.29,22.75-.12.62-.21,1.24-.04,2.05,3.57-2.75,6.56-6.03,9.1-9.7,9.4-13.58,10.9-28.54,7.55-44.32-3.4-15.99-10.72-30.24-19.27-43.98-2.63-4.23-5.89-8.05-8.03-12.59h3.33Z"/></svg>
+          MTH
+        </button>
+        <button class="icon-chip" data-icon="identidad" onclick="setIconType('identidad')">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="1.5" rx="0.75" fill="currentColor"/><rect y="4" width="13" height="1.5" rx="0.75" fill="currentColor"/><rect y="8" width="13" height="1.5" rx="0.75" fill="currentColor"/></svg>
+          Identidad
+        </button>
+        <button class="icon-chip" data-icon="none" onclick="setIconType('none')">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Ninguno
+        </button>
+      </div>
+      <input type="hidden" id="show-icon" value="1">
+      <input type="hidden" id="icon-type" value="mth">
+      <div id="icon-size-row" class="row2">
+        <div class="field"><label>Tamaño (px)</label><input type="number" id="icon-size" value="100" min="20" max="250" oninput="render()"></div>
+        <div class="field">
+          <label>Color</label>
+          <div class="color-hex-pair">
+            <input type="color" id="icon-color" value="#ffffff" oninput="syncHex('icon-color','icon-color-hex');render()">
+            <input type="text" id="icon-color-hex" value="#ffffff" maxlength="7" placeholder="#ffffff" oninput="syncColor('icon-color-hex','icon-color');render()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. LOGO LATERAL (Logo tab) -->
+  <div class="collapsible-section" id="panel-logo" style="display:none">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">5. Logo principal</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <div class="icon-selector" id="logo-type-selector">
+        <button class="icon-chip active" data-logo="mth" onclick="setLogoType('mth')">
+          <svg viewBox="0 0 612 596.35" xmlns="http://www.w3.org/2000/svg"><path d="M307.97,107.9c2.71,1.73,5.93,1.98,8.88,3.03,19.67,7.02,34.92,19.71,47.15,36.33,10.44,14.18,18.12,29.81,24.51,46.16,3,7.67,5.39,15.53,8.1,23.29,1.08,3.09.62,5.27-1.85,7.59-6.64,6.21-14.38,10.69-22.3,14.91-6.62,3.52-13.3,7.02-20.36,9.48-10.4,3.63-15.43,11.58-18.36,21.36-1.85,6.19-3.31,12.49-3.61,19.02-.12,2.58-.94,2.94-3.49,1.97-5.36-2.06-9.76-5.64-14.17-9.14-4.1-3.25-8.26-3.68-12.91-1.43-3.35,1.62-6.31,3.85-9.49,5.73-.61.36-1.37.76-1.14,1.7.18.74.88.9,1.49,1.08,1.24.37,2.46.85,3.73,1.04,7.3,1.13,10.68,4.54,11.71,13.18.63,5.33,1.53,10.57,3.67,15.58,3.56,8.32,10.17,12.91,18.42,15.61,4.7,1.54,9.59,2.09,14.49,2.17,9.53.14,19.07.18,28.6-.06,4.85-.12,7.89,2.6,10.92,5.62,1.15,1.14.18,1.99-.57,2.82-4.32,4.82-8.59,9.67-12.96,14.45-8.11,8.88-16.14,17.83-23.81,27.09-2.36,2.85-2.42,2.79-4.82,0-8.31-9.65-18.06-17.76-27.79-25.88-9.06-7.57-17.26-15.89-24-25.64-2.67-3.87-5.6-7.54-7.97-11.64-5-8.67-8.3-17.93-9.92-27.77-1.86-11.28-2.37-22.63-1.04-34,1.05-9.03,3.36-17.79,6.06-26.46,5.09-16.34,11.86-32.09,16.84-48.46,2.26-7.44,4.11-14.97,5.29-22.66.13-.87.02-2.18,1.06-2.33,1.06-.15,1.27,1.17,1.69,1.94,5.29,9.75,10.81,19.39,14.03,30.12,2.24,7.49,2.74,15.06,1.29,22.75-.12.62-.21,1.24-.04,2.05,3.57-2.75,6.56-6.03,9.1-9.7,9.4-13.58,10.9-28.54,7.55-44.32-3.4-15.99-10.72-30.24-19.27-43.98-2.63-4.23-5.89-8.05-8.03-12.59h3.33Z"/><path d="M106.46,450.87c-.78-7.27-.8-13.86.2-20.42,2.78-18.13,10.47-34.12,22.24-47.97,15.29-17.99,34.47-30.29,57.18-37,16.24-4.8,32.88-6.38,49.67-5.31,15.61,1,29.92,6.46,43,15.01,10.11,6.61,19.06,14.61,27.51,23.2,11.67,11.87,22.61,24.46,35.38,35.22,9.88,8.33,20.25,15.86,32.67,20,17.09,5.69,34.54,7.82,52.51,5.51,12.91-1.66,25.35-5,36.42-11.81,18.96-11.65,34.97-26.16,42.16-48.23.08-.24.25-.46.7-1.27-.23,4.87-1.25,8.95-2.59,12.91-6.19,18.37-17.9,32.76-32.75,44.82-9.02,7.33-18.94,13.24-29.59,17.85-11.49,4.97-23.4,8.5-35.87,10.25-13.76,1.92-27.29,1.39-40.68-2.33-9.78-2.72-18.89-6.93-27.46-12.36-10.02-6.36-19.34-13.63-28.05-21.68-10.25-9.47-20.35-19.11-30.74-28.43-10.74-9.64-21.9-18.78-34.42-26.12-6.24-3.66-13.23-4.74-20.16-5.64-9.57-1.24-19.23-1.14-28.74.63-11.62,2.17-22.58,6.34-33,11.92-12.19,6.53-23.01,14.86-31.97,25.38-9.37,11-16.62,23.25-20.68,37.27-.77,2.66-1.18,5.51-2.96,8.58Z"/><path d="M358.07,275.37c1-6.36,4.11-11.19,9.67-14.31,3.87-2.17,7.9-4.15,12.42-4.53,10.29-.85,22.15-15.15,22.71-25.4.14-2.6.29-5.13-.16-7.72-.76-4.4-.43-8.86-.36-13.29.16-9.53.28-19.04-2.34-28.37-1.12-3.99-2.93-7.7-4.57-12.08,2.95,1.58,4.05,4.11,5.67,6.11,9.84,12.09,18.58,24.93,24.49,39.41,9.52,23.33,7.71,46.42-2.42,69.12-5.83,13.07-13.5,25.03-21.98,36.53-1.79,2.43-3.49,2.81-6.35,1.8-6.17-2.2-12.51-3.93-18.78-5.85-.53-.16-1.1-.23-1.59-.47-.8-.38-2.04-.46-2.08-1.55-.03-.9,1.08-1.15,1.77-1.58,6.05-3.75,11.07-8.52,14.94-14.55,6.08-9.46,14.51-16.35,24.07-22.11,8.78-5.29,14.65-12.87,16.54-23.19.07-.36.19-.72.21-1.09.05-.81.47-1.86-.22-2.37-.72-.54-1.58.22-2.27.61-3.71,2.09-7.5,4.02-11.41,5.7-9.27,3.99-18.94,4.89-28.81,3.24-11.73-1.95-22.89,3.09-28.09,15.21-.14.33-.24.73-1.06.72Z"/></svg>
+          Monte Horeb
+        </button>
+        <button class="icon-chip" data-logo="identidad" onclick="setLogoType('identidad')">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="1.5" rx="0.75" fill="currentColor"/><rect y="4" width="13" height="1.5" rx="0.75" fill="currentColor"/><rect y="8" width="13" height="1.5" rx="0.75" fill="currentColor"/></svg>
+          Identidad
+        </button>
+        <button class="icon-chip" data-logo="none" onclick="setLogoType('none')">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Ninguno
+        </button>
+      </div>
+      <input type="hidden" id="logo-type" value="mth">
+      <div id="logo-size-row">
+        <div class="row2">
+          <div class="field"><label>Tamaño (px)</label><input type="number" id="logo-size" value="200" min="40" max="500" oninput="render()"></div>
+          <div class="field">
+            <label>Color</label>
+            <div class="color-hex-pair">
+              <input type="color" id="logo-color" value="#ffffff" oninput="syncHex('logo-color','logo-color-hex');render()">
+              <input type="text" id="logo-color-hex" value="#ffffff" maxlength="7" placeholder="#ffffff" oninput="syncColor('logo-color-hex','logo-color');render()">
+            </div>
+          </div>
+        </div>
+        <div class="field"><label>Posición vertical <span id="lvy-val">50%</span></label><input type="range" id="logo-vy" min="5" max="85" value="50" oninput="document.getElementById('lvy-val').textContent=this.value+'%';render()"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 6. CAPAS SVG / PNG -->
+  <div class="collapsible-section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-header-left">6. Capas SVG y PNG</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body collapsed">
+      <label class="upload-zone" id="overlay-zone" style="flex-direction:column;gap:6px;padding:20px 16px">
+        <input type="file" id="overlay-input" accept="image/svg+xml,image/png,image/webp" onchange="addOverlay(this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:var(--muted)"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span class="uz-main" style="font-size:13px;font-weight:600">Añadir capa</span>
+        <span class="uz-sub">SVG (colores editables) · PNG / WEBP</span>
+      </label>
+      <div class="overlay-list" id="overlay-list" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <button class="export-btn" id="export-btn" onclick="exportAll()" disabled>Exportar 3 archivos</button>
+</aside>
+
+<main class="main">
+  <div class="welcome" id="welcome-screen">
+    <div style="width:56px;height:52px;margin:0 auto 8px;display:flex;align-items:flex-end;justify-content:center">
+      <svg viewBox="0 0 612 596.35" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;fill:var(--text)">
+        <path d="M307.97,107.9c2.71,1.73,5.93,1.98,8.88,3.03,19.67,7.02,34.92,19.71,47.15,36.33,10.44,14.18,18.12,29.81,24.51,46.16,3,7.67,5.39,15.53,8.1,23.29,1.08,3.09.62,5.27-1.85,7.59-6.64,6.21-14.38,10.69-22.3,14.91-6.62,3.52-13.3,7.02-20.36,9.48-10.4,3.63-15.43,11.58-18.36,21.36-1.85,6.19-3.31,12.49-3.61,19.02-.12,2.58-.94,2.94-3.49,1.97-5.36-2.06-9.76-5.64-14.17-9.14-4.1-3.25-8.26-3.68-12.91-1.43-3.35,1.62-6.31,3.85-9.49,5.73-.61.36-1.37.76-1.14,1.7.18.74.88.9,1.49,1.08,1.24.37,2.46.85,3.73,1.04,7.3,1.13,10.68,4.54,11.71,13.18.63,5.33,1.53,10.57,3.67,15.58,3.56,8.32,10.17,12.91,18.42,15.61,4.7,1.54,9.59,2.09,14.49,2.17,9.53.14,19.07.18,28.6-.06,4.85-.12,7.89,2.6,10.92,5.62,1.15,1.14.18,1.99-.57,2.82-4.32,4.82-8.59,9.67-12.96,14.45-8.11,8.88-16.14,17.83-23.81,27.09-2.36,2.85-2.42,2.79-4.82,0-8.31-9.65-18.06-17.76-27.79-25.88-9.06-7.57-17.26-15.89-24-25.64-2.67-3.87-5.6-7.54-7.97-11.64-5-8.67-8.3-17.93-9.92-27.77-1.86-11.28-2.37-22.63-1.04-34,1.05-9.03,3.36-17.79,6.06-26.46,5.09-16.34,11.86-32.09,16.84-48.46,2.26-7.44,4.11-14.97,5.29-22.66.13-.87.02-2.18,1.06-2.33,1.06-.15,1.27,1.17,1.69,1.94,5.29,9.75,10.81,19.39,14.03,30.12,2.24,7.49,2.74,15.06,1.29,22.75-.12.62-.21,1.24-.04,2.05,3.57-2.75,6.56-6.03,9.1-9.7,9.4-13.58,10.9-28.54,7.55-44.32-3.4-15.99-10.72-30.24-19.27-43.98-2.63-4.23-5.89-8.05-8.03-12.59h3.33Z"/>
+        <path d="M106.46,450.87c-.78-7.27-.8-13.86.2-20.42,2.78-18.13,10.47-34.12,22.24-47.97,15.29-17.99,34.47-30.29,57.18-37,16.24-4.8,32.88-6.38,49.67-5.31,15.61,1,29.92,6.46,43,15.01,10.11,6.61,19.06,14.61,27.51,23.2,11.67,11.87,22.61,24.46,35.38,35.22,9.88,8.33,20.25,15.86,32.67,20,17.09,5.69,34.54,7.82,52.51,5.51,12.91-1.66,25.35-5,36.42-11.81,18.96-11.65,34.97-26.16,42.16-48.23.08-.24.25-.46.7-1.27-.23,4.87-1.25,8.95-2.59,12.91-6.19,18.37-17.9,32.76-32.75,44.82-9.02,7.33-18.94,13.24-29.59,17.85-11.49,4.97-23.4,8.5-35.87,10.25-13.76,1.92-27.29,1.39-40.68-2.33-9.78-2.72-18.89-6.93-27.46-12.36-10.02-6.36-19.34-13.63-28.05-21.68-10.25-9.47-20.35-19.11-30.74-28.43-10.74-9.64-21.9-18.78-34.42-26.12-6.24-3.66-13.23-4.74-20.16-5.64-9.57-1.24-19.23-1.14-28.74.63-11.62,2.17-22.58,6.34-33,11.92-12.19,6.53-23.01,14.86-31.97,25.38-9.37,11-16.62,23.25-20.68,37.27-.77,2.66-1.18,5.51-2.96,8.58Z"/>
+        <path d="M358.07,275.37c1-6.36,4.11-11.19,9.67-14.31,3.87-2.17,7.9-4.15,12.42-4.53,10.29-.85,22.15-15.15,22.71-25.4.14-2.6.29-5.13-.16-7.72-.76-4.4-.43-8.86-.36-13.29.16-9.53.28-19.04-2.34-28.37-1.12-3.99-2.93-7.7-4.57-12.08,2.95,1.58,4.05,4.11,5.67,6.11,9.84,12.09,18.58,24.93,24.49,39.41,9.52,23.33,7.71,46.42-2.42,69.12-5.83,13.07-13.5,25.03-21.98,36.53-1.79,2.43-3.49,2.81-6.35,1.8-6.17-2.2-12.51-3.93-18.78-5.85-.53-.16-1.1-.23-1.59-.47-.8-.38-2.04-.46-2.08-1.55-.03-.9,1.08-1.15,1.77-1.58,6.05-3.75,11.07-8.52,14.94-14.55,6.08-9.46,14.51-16.35,24.07-22.11,8.78-5.29,14.65-12.87,16.54-23.19.07-.36.19-.72.21-1.09.05-.81.47-1.86-.22-2.37-.72-.54-1.58.22-2.27.61-3.71,2.09-7.5,4.02-11.41,5.7-9.27,3.99-18.94,4.89-28.81,3.24-11.73-1.95-22.89,3.09-28.09,15.21-.14.33-.24.73-1.06.72Z"/>
+      </svg>
+    </div>
+    <h2>Visuales de Mensaje</h2>
+    <p>De un panorámico a seis pantallas, en un solo lugar.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Sube el fondo</strong><span>Imagen panorámica 1800×600 px. Fill-to-width, sin distorsión.</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Cada tab tiene su propio diseño</strong><span>Versículo y Logo guardan configuraciones de tipografía separadas. Cambia de tab sin perder nada.</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Sube tus fuentes</strong><span>Clic en <em>＋ fuente</em> — .ttf / .otf / .woff con licencia.</span></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Capas SVG o PNG</strong><span>SVG: edita colores por elemento. PNG: fondo transparente desde PS/AI.</span></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text"><strong>Exporta</strong><span>Tab Versículo → lateral_izq, versiculo, lateral_der. Tab Logo → lat_logo_izq, central, lat_logo_der.</span></div></div>
+    </div>
+    <div class="tips">
+      <div class="tips-title">Tip</div>
+      <div class="tip">Las etiquetas de color <span style="color:var(--accent)">Versículo</span> / <span style="color:var(--accent2)">Logo</span> en la barra lateral siempre muestran para qué tab estás editando.</div>
+    </div>
+  </div>
+
+  <div id="preview-area" style="display:none">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <div>
+        <div class="preview-label" id="preview-label" style="margin-bottom:4px">lateral_izq / versiculo / lateral_der</div>
+        <div class="preview-info-bar" id="preview-info-bar">
+          <span><span class="preview-info-dot dot-v"></span><span id="info-tab-name">Versículo</span></span>
+          <span class="preview-info-sep">·</span>
+          <span id="info-dimensions">1800 × 600</span>
+          <span class="preview-info-sep">·</span>
+          <span id="info-files">3 archivos</span>
+          <span class="preview-info-sep">·</span>
+          <span id="info-dpi">150 dpi</span>
+        </div>
+      </div>
+      <div class="zoom-control">
+        <button class="zoom-btn" onclick="adjustZoom(-10)" title="Alejar">−</button>
+        <span class="zoom-val" id="preview-zoom-val">100%</span>
+        <button class="zoom-btn" onclick="adjustZoom(+10)" title="Acercar">+</button>
+        <button class="zoom-fit-btn" onclick="adjustZoom(0)" title="Ajustar al ancho">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 5V2h3M12 2h3v3M1 11v3h3M15 11v3h-3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;overflow-y:hidden;padding-bottom:4px;margin-bottom:1.5rem;">
+      <div class="preview-strip" id="preview-strip" style="min-width:max-content; gap:3px; display:flex;">
+        <div class="preview-wrap" id="pw-li" style="flex:none"><canvas id="cv-li"></canvas><div class="zone-tag" id="tag-li">lateral_izq</div></div>
+        <div class="preview-wrap" id="pw-ce" style="flex:none"><canvas id="cv-ce"></canvas><div class="zone-tag" id="tag-ce">versiculo</div></div>
+        <div class="preview-wrap" id="pw-ld" style="flex:none"><canvas id="cv-ld"></canvas><div class="zone-tag" id="tag-ld">lateral_der</div></div>
+      </div>
+    </div>
+    <div id="results-section" style="display:none">
+      <div class="preview-label">Archivos exportados</div>
+      <div class="results" id="results"></div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const LAT_W=300, CENTER_W=1200, H=600, TOTAL_W=1800;
+let bgImage=null, currentTab='versiculo';
+
+// ── DRAG & DROP — per-zone highlighting ──
+;(function(){
+  // 1. Block browser default on the ENTIRE document
+  ['dragenter','dragover','dragleave','drop'].forEach(function(evt){
+    document.addEventListener(evt, function(e){ e.preventDefault(); e.stopPropagation(); }, false);
+  });
+
+  // 2. Wire each drop zone independently
+  function wireZone(zoneId, handler){
+    var el = document.getElementById(zoneId);
+    if(!el) return;
+    var counter = 0;
+
+    el.addEventListener('dragenter', function(){
+      counter++;
+      el.classList.add('drag-highlight');
+    }, false);
+
+    el.addEventListener('dragleave', function(){
+      counter--;
+      if(counter <= 0){ counter = 0; el.classList.remove('drag-highlight'); }
+    }, false);
+
+    el.addEventListener('drop', function(e){
+      counter = 0;
+      el.classList.remove('drag-highlight');
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if(files && files.length) handler(files[0]);
+    }, false);
+  }
+
+  // Wait for DOM
+  document.addEventListener('DOMContentLoaded', function(){
+    // Background zone
+    wireZone('bg-zone', function(file){
+      if(!file.type || !file.type.startsWith('image/')) return;
+      var img = new Image();
+      img.onload = function(){
+        bgImage = img;
+        var z = document.getElementById('bg-zone');
+        z.classList.add('has-file');
+        z.querySelector('.uz-main').textContent = '✓ ' + file.name;
+        z.querySelector('.uz-sub').textContent = img.naturalWidth + ' × ' + img.naturalHeight + ' px';
+        document.getElementById('export-btn').disabled = false;
+        document.getElementById('bg-crop-controls').style.display = 'block';
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('preview-area').style.display = 'block';
+        var dpi = Math.round(img.naturalWidth / 18);
+        document.getElementById('info-dimensions').textContent = img.naturalWidth + ' × ' + img.naturalHeight;
+        document.getElementById('info-dpi').textContent = dpi + ' dpi';
+        adjustZoom(0);
+        render();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // Overlay zone
+    wireZone('overlay-zone', function(file){
+      if(!file.type || !file.type.startsWith('image/')) return;
+      var isSvg = file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+      var url = URL.createObjectURL(file);
+      if(isSvg){
+        fetch(url).then(function(r){ return r.text(); }).then(function(txt){
+          var doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+          var svgEl = doc.querySelector('svg');
+          if(svgEl && !svgEl.getAttribute('viewBox')){
+            var w = parseFloat(svgEl.getAttribute('width')) || 800;
+            var h = parseFloat(svgEl.getAttribute('height')) || 600;
+            svgEl.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+          }
+          var result = extractSvgColorGroups(doc);
+          var dataUrl = svgToDataURL(doc);
+          var img = new Image();
+          img.onload = function(){
+            tabOverlays[currentTab].push({
+              id:Date.now(), img:img, svgDoc:doc,
+              colorGroups:result.colorGroups, styleEls:result.styleEls,
+              isSvg:true, name:file.name,
+              opacity:1, x:0, y:0, scale:100, rotation:0,
+              zones:new Set(['li','ce','ld']), open:true
+            });
+            renderOverlayList(); render();
+          };
+          img.src = dataUrl;
+        });
+      } else {
+        var img = new Image();
+        img.onload = function(){
+          tabOverlays[currentTab].push({
+            id:Date.now(), img:img, isSvg:false, name:file.name,
+            opacity:1, x:0, y:0, scale:100, rotation:0,
+            tintColor:'#ffffff', tintEnabled:false,
+            zones:new Set(['li','ce','ld']), open:true
+          });
+          renderOverlayList(); render();
+        };
+        img.src = url;
+      }
+    });
+  });
+})();
+
+// Per-tab overlays
+const tabOverlays = { versiculo: [], logo: [] };
+// Convenience getter
+function overlays() { return tabOverlays[currentTab]; }
+
+// ── PER-TAB STATE ──
+// All typography + title settings stored independently per tab
+const DEFAULT_STATE = () => ({
+  lines:'',
+  fontDisplay:'', fontSub:'',
+  fsDisplay:'', fsSub:'',
+  fwDisplay:'700', fstyleDisplay:'normal',
+  fwSub:'400', fstyleSub:'normal',
+  textColor:'#ffffff', textAlign:'center',
+  vy:50, mx:40, lh:1.15
+});
+
+const tabState = {
+  versiculo: DEFAULT_STATE(),
+  logo: DEFAULT_STATE()
+};
+
+// Fields to save/restore (id → state key)
+const FIELD_MAP = [
+  ['title-lines','lines'],
+  ['font-display','fontDisplay'],['font-sub','fontSub'],
+  ['fs-display','fsDisplay'],['fs-sub','fsSub'],
+  ['fw-display','fwDisplay'],['fstyle-display','fstyleDisplay'],
+  ['fw-sub','fwSub'],['fstyle-sub','fstyleSub'],
+  ['text-color','textColor'],['text-align','textAlign'],
+  ['text-vy','vy'],['text-mx','mx'],['line-height','lh']
+];
+
+function saveState() {
+  const s = tabState[currentTab];
+  FIELD_MAP.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) s[key] = el.value;
+  });
+}
+
+function restoreState() {
+  const s = tabState[currentTab];
+  FIELD_MAP.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = s[key] ?? '';
+  });
+  // Update range display labels
+  document.getElementById('vy-val').textContent = (s.vy||50) + '%';
+  document.getElementById('mx-val').textContent = (s.mx||40) + 'px';
+  document.getElementById('lh-val').textContent = parseFloat(s.lh||1.15).toFixed(2);
+  syncAllHexFields();
+}
+
+function saveAndRender() { saveState(); render(); }
+
+// ── THEME TOGGLE ──
+let isDark = false;
+const ICON_MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+const ICON_SUN  = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.classList.toggle('dark', isDark);
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.innerHTML = isDark ? ICON_SUN : ICON_MOON;
+}
+
+// ── COLLAPSIBLE SECTIONS ──
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const chev = header.querySelector('.section-chevron');
+  const collapsed = body.classList.toggle('collapsed');
+  if (chev) chev.classList.toggle('open', !collapsed);
+}
+
+// ── ICON TYPE SELECTOR ──
+// Identidad logo rendered via SVG image (exact, pixel-perfect, any color)
+const IDENTIDAD_SVG_TEMPLATE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 792 183.22">
+  <rect x="63.05" y="76.83" width="11.24" height="43.05" fill="COLOR"/>
+  <path d="M164.05,98.32c0,12.84-9.39,21.56-23.34,21.56h-18.12v-43.05h18.55c13.63,0,22.91,8.72,22.91,21.5M152.57,98.44c0-7.43-4.85-12.46-11.67-12.46h-7.06v24.82h7.62c6.51,0,11.12-4.98,11.12-12.35" fill="COLOR"/>
+  <polygon points="243.58 76.83 243.58 85.79 220.86 85.79 220.86 93.84 241.37 93.84 241.37 102.75 220.86 102.81 220.86 110.91 244.19 110.91 244.19 119.88 209.62 119.88 209.62 76.83 243.58 76.83" fill="COLOR"/>
+  <polygon points="300.93 76.83 320.46 102.75 320.46 76.83 330.9 76.83 330.9 119.88 321.07 119.88 301.55 94.09 301.55 119.88 291.04 119.88 291.04 76.83 300.93 76.83" fill="COLOR"/>
+  <polygon points="412.46 76.83 412.46 86.1 399.56 86.1 399.56 119.88 388.32 119.88 388.32 86.1 375.54 86.1 375.54 76.83 412.46 76.83" fill="COLOR"/>
+  <rect x="456.97" y="76.83" width="11.24" height="43.05" fill="COLOR"/>
+  <path d="M557.98,98.32c0,12.84-9.39,21.56-23.34,21.56h-18.12v-43.05h18.55c13.63,0,22.91,8.72,22.91,21.5M546.5,98.44c0-7.43-4.86-12.46-11.67-12.46h-7.06v24.82h7.62c6.51,0,11.12-4.98,11.12-12.35" fill="COLOR"/>
+  <path d="M631.06,112.26h-18.61l-3.01,7.62h-11.55l18.49-43.05h11.55l18.06,43.05h-11.98l-2.95-7.62ZM627.74,103.67l-5.9-15.35-6.01,15.35h11.91Z" fill="COLOR"/>
+  <path d="M731.28,98.32c0,12.84-9.4,21.56-23.34,21.56h-18.12v-43.05h18.54c13.64,0,22.91,8.72,22.91,21.5M719.79,98.44c0-7.43-4.85-12.46-11.67-12.46h-7.06v24.82h7.62c6.5,0,11.11-4.98,11.11-12.35" fill="COLOR"/>
+  <path d="M777.4,172.17H16.93V24.54h760.47v147.64ZM28.93,160.17h736.46V36.54H28.93v123.63Z" fill="COLOR" fill-rule="evenodd"/>
+</svg>`;
+
+// Cache rendered Identidad images by color to avoid re-creating each frame
+const identidadCache = {};
+
+function getIdentidadImage(color, callback) {
+  const key = color;
+  if (identidadCache[key]) { callback(identidadCache[key]); return; }
+  const svgStr = IDENTIDAD_SVG_TEMPLATE.replace(/COLOR/g, color);
+  const blob = new Blob([svgStr], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => { identidadCache[key] = img; URL.revokeObjectURL(url); callback(img); };
+  img.src = url;
+}
+
+function drawIdentidadLogo(ctx, cx, cy, size, color) {
+  // size = desired rendered width; aspect = 760.47/147.63 ≈ 5.15
+  const aspect = 760.47 / 147.63;
+  const dw = size, dh = size / aspect;
+  getIdentidadImage(color, img => {
+    ctx.save();
+    ctx.drawImage(img, 0, 0, 792, 183.22, cx - dw/2, cy - dh/2, dw, dh);
+    ctx.restore();
+    render(); // re-render once image is ready
+  });
+}
+
+function setIconType(type) {
+  document.getElementById('icon-type').value = type;
+  document.getElementById('show-icon').value = type === 'none' ? '0' : '1';
+  document.querySelectorAll('#icon-type-selector .icon-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.icon === type);
+  });
+  const sizeRow = document.getElementById('icon-size-row');
+  if (sizeRow) sizeRow.style.display = type === 'none' ? 'none' : '';
+  render();
+}
+
+function setLogoType(type) {
+  document.getElementById('logo-type').value = type;
+  document.querySelectorAll('#logo-type-selector .icon-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.logo === type);
+  });
+  const sizeRow = document.getElementById('logo-size-row');
+  if (sizeRow) sizeRow.style.display = type === 'none' ? 'none' : '';
+  render();
+}
+
+function drawIcon(ctx, cx, cy, size, color) {
+  const type = document.getElementById('icon-type')?.value || 'mth';
+  if (type === 'none') return;
+  if (type === 'identidad') {
+    drawIdentidadLogo(ctx, cx, cy, size, color);
+  } else {
+    drawFlameIcon(ctx, cx, cy, size, color);
+  }
+}
+
+// ── ZOOM CONTROL ──
+let currentZoom = 100;
+function adjustZoom(delta) {
+  const mainW = document.querySelector('.main')?.clientWidth || 800;
+  const totalLogical = LAT_W + CENTER_W + LAT_W + 6; // 3 zones + gaps
+  if (delta === 0) {
+    // Fit to width
+    currentZoom = Math.min(100, Math.floor((mainW - 56) / totalLogical * 100));
+  } else {
+    currentZoom = Math.max(10, Math.min(100, currentZoom + delta));
+  }
+  setPreviewZoom(currentZoom);
+}
+
+// ── COLOR ↔ HEX SYNC ──
+function syncHex(colorId, hexId) {
+  const col = document.getElementById(colorId);
+  const hex = document.getElementById(hexId);
+  if (col && hex) hex.value = col.value;
+}
+function syncColor(hexId, colorId) {
+  const hex = document.getElementById(hexId);
+  const col = document.getElementById(colorId);
+  if (!hex || !col) return;
+  const v = hex.value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) col.value = v;
+}
+// Called after restoreState to sync hex text fields with color inputs
+function syncAllHexFields() {
+  [['text-color','text-color-hex'],['icon-color','icon-color-hex'],['logo-color','logo-color-hex']].forEach(([cid,hid])=>{
+    const c=document.getElementById(cid), h=document.getElementById(hid);
+    if(c&&h) h.value=c.value;
+  });
+}
+const LOGO_PATHS=["M307.57,38.21c2.71,1.73,5.93,1.98,8.88,3.03,19.67,7.02,34.92,19.71,47.15,36.33,10.44,14.18,18.12,29.81,24.51,46.16,3,7.67,5.39,15.53,8.1,23.29,1.08,3.09.62,5.27-1.85,7.59-6.64,6.21-14.38,10.69-22.3,14.91-6.62,3.52-13.3,7.02-20.36,9.48-10.4,3.63-15.43,11.58-18.36,21.36-1.85,6.19-3.31,12.49-3.61,19.02-.12,2.58-.94,2.94-3.49,1.97-5.36-2.06-9.76-5.64-14.17-9.14-4.1-3.25-8.26-3.68-12.91-1.43-3.35,1.62-6.31,3.85-9.49,5.73-.61.36-1.37.76-1.14,1.7.18.74.88.9,1.49,1.08,1.24.37,2.46.85,3.73,1.04,7.3,1.13,10.68,4.54,11.71,13.18.63,5.33,1.53,10.57,3.67,15.58,3.56,8.32,10.17,12.91,18.42,15.61,4.7,1.54,9.59,2.09,14.49,2.17,9.53.14,19.07.18,28.6-.06,4.85-.12,7.89,2.6,10.92,5.62,1.15,1.14.18,1.99-.57,2.82-4.32,4.82-8.59,9.67-12.96,14.45-8.11,8.88-16.14,17.83-23.81,27.09-2.36,2.85-2.42,2.79-4.82,0-8.31-9.65-18.06-17.76-27.79-25.88-9.06-7.57-17.26-15.89-24-25.64-2.67-3.87-5.6-7.54-7.97-11.64-5-8.67-8.3-17.93-9.92-27.77-1.86-11.28-2.37-22.63-1.04-34,1.05-9.03,3.36-17.79,6.06-26.46,5.09-16.34,11.86-32.09,16.84-48.46,2.26-7.44,4.11-14.97,5.29-22.66.13-.87.02-2.18,1.06-2.33,1.06-.15,1.27,1.17,1.69,1.94,5.29,9.75,10.81,19.39,14.03,30.12,2.24,7.49,2.74,15.06,1.29,22.75-.12.62-.21,1.24-.04,2.05,3.57-2.75,6.56-6.03,9.1-9.7,9.4-13.58,10.9-28.54,7.55-44.32-3.4-15.99-10.72-30.24-19.27-43.98-2.63-4.23-5.89-8.05-8.03-12.59h3.33Z","M106.05,381.18c-.78-7.27-.8-13.86.2-20.42,2.78-18.13,10.47-34.12,22.24-47.97,15.29-17.99,34.47-30.29,57.18-37,16.24-4.8,32.88-6.38,49.67-5.31,15.61,1,29.92,6.46,43,15.01,10.11,6.61,19.06,14.61,27.51,23.2,11.67,11.87,22.61,24.46,35.38,35.22,9.88,8.33,20.25,15.86,32.67,20,17.09,5.69,34.54,7.82,52.51,5.51,12.91-1.66,25.35-5,36.42-11.81,18.96-11.65,34.97-26.16,42.16-48.23.08-.24.25-.46.7-1.27-.23,4.87-1.25,8.95-2.59,12.91-6.19,18.37-17.9,32.76-32.75,44.82-9.02,7.33-18.94,13.24-29.59,17.85-11.49,4.97-23.4,8.5-35.87,10.25-13.76,1.92-27.29,1.39-40.68-2.33-9.78-2.72-18.89-6.93-27.46-12.36-10.02-6.36-19.34-13.63-28.05-21.68-10.25-9.47-20.35-19.11-30.74-28.43-10.74-9.64-21.9-18.78-34.42-26.12-6.24-3.66-13.23-4.74-20.16-5.64-9.57-1.24-19.23-1.14-28.74.63-11.62,2.17-22.58,6.34-33,11.92-12.19,6.53-23.01,14.86-31.97,25.38-9.37,11-16.62,23.25-20.68,37.27-.77,2.66-1.18,5.51-2.96,8.58Z","M357.66,205.68c1-6.36,4.11-11.19,9.67-14.31,3.87-2.17,7.9-4.15,12.42-4.53,10.29-.85,22.15-15.15,22.71-25.4.14-2.6.29-5.13-.16-7.72-.76-4.4-.43-8.86-.36-13.29.16-9.53.28-19.04-2.34-28.37-1.12-3.99-2.93-7.7-4.57-12.08,2.95,1.58,4.05,4.11,5.67,6.11,9.84,12.09,18.58,24.93,24.49,39.41,9.52,23.33,7.71,46.42-2.42,69.12-5.83,13.07-13.5,25.03-21.98,36.53-1.79,2.43-3.49,2.81-6.35,1.8-6.17-2.2-12.51-3.93-18.78-5.85-.53-.16-1.1-.23-1.59-.47-.8-.38-2.04-.46-2.08-1.55-.03-.9,1.08-1.15,1.77-1.58,6.05-3.75,11.07-8.52,14.94-14.55,6.08-9.46,14.51-16.35,24.07-22.11,8.78-5.29,14.65-12.87,16.54-23.19.07-.36.19-.72.21-1.09.05-.81.47-1.86-.22-2.37-.72-.54-1.58.22-2.27.61-3.71,2.09-7.5,4.02-11.41,5.7-9.27,3.99-18.94,4.89-28.81,3.24-11.73-1.95-22.89,3.09-28.09,15.21-.14.33-.24.73-1.06.72Z","M272.12,462.09c-5.64,3.87-10.86,7.51-16.14,11.05-6.3,4.22-12.47,8.65-19.44,11.77-.93.42-1.88.8-2.84,1.1-5.04,1.59-7.32.09-7.83-5.23-.42-4.38.01-8.68,1.49-12.86.23-.66.86-1.48.25-2.07-.78-.76-1.54.16-2.22.49-5.15,2.52-10.2,5.24-15.53,7.41-2.3.94-4.64,1.26-7.07.95-4.24-.54-6.89-4.06-6.29-8.25.12-.86.82-1.92-.25-2.51-.92-.51-1.77.29-2.53.75-4.38,2.64-8.1,6.14-11.97,9.43-1.55,1.32-3.18,2.54-4.82,3.74-1.29.94-2.71,1.87-4.33.88-1.62-.99-1.4-2.74-1.2-4.28.48-3.79,1.87-7.34,3.28-10.86.27-.67.56-1.34,1.03-2.45-1.85.59-3.31,1.03-4.76,1.52-4.58,1.54-9.29,2.58-14.08,3.03-2.06.19-3.4.99-4.62,2.54-2.29,2.93-4.84,5.64-8.18,7.4-2.07,1.09-4.38,2.06-6.56.5-2.19-1.57-2.4-4.07-2.05-6.54,1.29-9.01,6.49-15.77,12.86-21.77,1.83-1.72,6.5-1.02,8.19.92,1,1.15.55,1.64-.77,2.1-8.57,2.94-12.29,10.08-15.08,17.88-.67,1.87.4,2.52,2.3,1.85,2.35-.82,4.17-2.35,5.84-4.11.62-.65.72-1.34.45-2.28-1.09-3.82,3.96-9.87,8.03-9.59,2.34.16,2.24,1.74,1.65,3.44-1.01,2.95-1.01,2.94,2.14,2.59,5.48-.6,10.63-2.38,15.78-4.2,1.42-.5,2.19-1.61,2.92-2.82,1.83-3,3.71-5.97,5.56-8.96.72-1.16,1.73-1.93,3.08-2.18,1.46-.27,3.21-.78,4.23.4,1.18,1.36-.44,2.54-1.15,3.59-4.19,6.21-8.42,12.39-12.17,18.88-.83,1.43-1.43,3-2.06,4.53-.2.48-.39,1.18.09,1.57.68.56,1.18-.14,1.65-.52,3.18-2.54,6.33-5.12,9.51-7.66,3.19-2.54,6.46-4.96,10.03-6.94,1.88-1.04,3.85-1.91,6.07-1,2.09.85,2.89,2.3,1.79,4.4-.68,1.31-1.61,2.48-2.35,3.76-.64,1.11-1.36,2.24-1.73,3.45-1.02,3.39.18,4.63,3.55,3.61,6.15-1.84,11.61-5.29,17.5-7.69,5.97-2.43,9.57-6.66,12.51-12.14,3.18-5.94,7.05-11.51,10.59-17.26.42-.68,1.28-1.47.78-2.22-.53-.81-1.53-.11-2.32-.03-4.22.43-8.45,1.24-12.68.13-3.56-.93-6.53-2.62-7.86-6.32-.26-.71-.45-1.46.15-2.09.65-.67,1.39-.27,2.07-.03.69.25,1.41.52,2.01.93,6.11,4.23,12.89,3.07,19.6,2.49,1.83-.16,2.99-1.04,3.96-2.59,2.36-3.77,4.58-7.61,6.6-11.57.51-1.01,1.04-1.97,2.14-2.45,1.64-.71,3.48-1.5,4.96-.12,1.63,1.52.19,3.11-.63,4.47-1.71,2.85-3.56,5.63-5.34,8.45-.29.46-.8.95-.52,1.5.38.75,1.15.38,1.74.29,5.12-.77,10.23-1.59,15.35-2.34,1.44-.21,3.11-.63,4.1.83.82,1.21.07,2.55-.58,3.64-.87,1.47-2.34,1.63-3.91,1.39-6.35-.97-12.52.34-18.68,1.59-1.02.21-1.88.75-2.48,1.65-8.66,13.02-17.3,26.06-23.25,40.63-.66,1.62-1.25,3.29-1.28,5.09-.04,2.64,1.09,3.63,3.61,2.97,2.34-.61,4.49-1.7,6.61-2.85,8.64-4.67,16.42-10.75,25.08-15.36,5.58-2.97,10.75-5.96,14.18-11.7,2.25-3.76,5.96-6.54,9.98-8.63,2.23-1.16,4.37-1.42,6.45.33,2.07,1.74,3.08,3.93,2.69,6.61-.72,4.94-4.27,7.88-7.97,10.54-3.55,2.55-7.57,4.24-11.71,5.64-2.82.95-4.71,4.78-3.87,7.63.5,1.7,1.89,1.92,3.32,1.85,3.46-.15,6.72-1.23,9.91-2.49,9.32-3.69,18-8.65,26.78-13.42,1.06-.57,2.42-2.35,3.51-.72.91,1.37-.14,3.05-1.32,4.19-1.76,1.68-3.97,2.7-6.07,3.86-8.93,4.9-17.9,9.7-27.81,12.41-.62.17-1.26.29-1.89.45-7.88,2.04-11.4-4.43-10.97-10.28.13-1.73.71-3.42,1.22-5.77ZM280.56,459.23c5.64-2.17,10.23-5.57,13.09-11,.34-.64.66-1.46-.06-2.03-.69-.54-1.46-.08-2.05.31-4.85,3.19-8.34,7.57-10.98,12.72Z","M134.91,420.3c-4.74,3.1-8.67,6.58-12.56,10.07-12.19,10.97-23.56,22.75-34.14,35.27-.59.7-1.29,1.34-2.04,1.85-1.59,1.1-3.46,1.82-5.2.78-1.62-.97-1.06-2.89-.72-4.35,1.84-7.93,3.87-15.81,5.7-23.73.96-4.14,1.67-8.34,2.43-12.52.18-.96.66-2.34-.23-2.86-1.1-.64-1.97.64-2.78,1.31-6.12,5.1-10.75,11.43-14.98,18.1-6.4,10.1-11.85,20.71-16.79,31.59-.45.99-.73,2.25-2.08,2.35-1.51.11-1.93-1.2-2.51-2.23-1.26-2.26-1.4-4.58-.29-6.92,8.8-18.57,19.78-35.55,35.76-48.89,2.55-2.13,5.47-3.01,8.67-3.27,2.43-.2,3.57.87,3.49,3.41-.29,8.68-2.37,17.01-4.61,25.32-.51,1.87-.98,3.76-1.41,5.65-.13.59-.35,1.38.39,1.74.71.34,1.25-.23,1.68-.68,1.22-1.27,2.34-2.62,3.55-3.89,10.94-11.45,22.28-22.5,34.73-32.3,5-3.93,10.1-7.84,15.92-10.57,1.38-.65,3.19-1.55,4.41-.21,1.32,1.45-.06,3.03-.94,4.22-6.74,9.12-10.83,19.54-14.87,29.98-5.81,15.01-11.31,30.16-19.38,44.18-2.04,3.54-4.16,7.09-8.73,7.91-1.3.23-2.7.63-3.57-.62-.76-1.09.18-2.11.75-3.03,11.13-18.15,19.36-37.65,26.99-57.44,1.16-3.02,2.24-6.07,3.35-9.11.06-.16,0-.35,0-1.13Z","M389.51,443.67c-6.97.63-14.58,1.54-22.1,3.18-1.38.3-2.36.96-3.09,2.12-6.35,10.21-13.11,20.2-16.43,31.97-.68,2.4-2.26,2.71-4.06.94-2.18-2.14-2.71-4.95-1.41-7.9,2.96-6.74,7.44-12.56,11.32-18.74.84-1.33,1.71-2.64,2.49-4.01.39-.68,1.23-1.42.58-2.23-.52-.65-1.38-.17-2.09-.01-3.71.81-7.36,1.8-10.84,3.39-.79.36-1.63,1.19-2.54.35-.95-.88-.37-1.94,0-2.84,1.36-3.35,3.54-5.86,7.32-6.49,3.56-.59,7.11-1.27,10.69-1.64,2.14-.22,3.62-.99,4.72-2.84,5.42-9.15,11.14-18.14,15.33-27.96.84-1.96,2.05-2.13,3.76-1.43,2.89,1.19,4.21,4.23,2.84,7.05-1.99,4.1-4.95,7.58-7.56,11.28-2.35,3.32-4.66,6.68-6.95,10.04-.34.5-1,1.07-.56,1.72.42.62,1.19.31,1.81.24,7.43-.94,14.86-1.93,22.36-2.06,1.85-.03,2.8-1.01,3.67-2.46,5.37-8.97,10.78-17.91,15.51-27.25,1.36-2.7,3.67-3.89,6.57-3.45,3.04.46,3.93,2.38,2.08,4.78-5.77,7.48-10.94,15.37-15.76,23.49-.38.64-.72,1.3-1.14,1.91-1.16,1.71-1.11,2.71,1.34,2.51.83-.07,1.67-.03,2.5.03.72.05,1.59.04,1.8.95.2.85-.47,1.36-1.06,1.8-2,1.5-4.38,1.96-6.76,2.3-1.51.22-2.56.78-3.31,2.14-6.88,12.59-13.65,25.23-18.86,38.63-.6,1.54-.95,3.18-1.35,4.79-.58,2.36-1.81,2.89-3.78,1.59-2.63-1.74-3.88-5.28-2.79-8.25,1.78-4.89,4.59-9.27,7.1-13.8,3.8-6.88,7.56-13.79,11.29-20.71,1.74-3.24,1.69-3.27-2.65-3.15Z","M527.78,453.02c5.11-3.24,9.93-6.66,15.21-9.37,2.81-1.44,5.69-2.77,8.97-2.5,4.32.35,6.43,3.46,4.29,7.12-6.09,10.41-14.5,18.13-26.57,21.12-.53.13-1.09.22-1.64.24-.98.03-1.97-.22-2.21-1.28-.27-1.22.78-1.43,1.67-1.77,8.34-3.23,15.19-8.36,20.12-15.9.15-.23.33-.45.45-.7.48-1.03,1.81-2.16.85-3.16-.76-.8-2.06.23-3.04.65-12.31,5.28-21.73,14.21-30.29,24.2-.54.63-.96,1.38-1.54,1.97-.94.95-1.4,3.14-3.33,2-1.81-1.07-2.06-2.95-1.32-4.9.5-1.32,1.38-2.39,2.34-3.4,1.26-1.32,2.47-2.7,3.33-4.56-2.62,1.37-5.23,2.75-7.86,4.11-6.01,3.11-12.15,5.9-18.63,7.88-1.06.32-2.14.61-3.22.83-7.23,1.47-12.62-3.29-11.14-10.51,2.32-11.32,8.8-20.02,18.6-26.14,2.15-1.34,4.52-1.69,6.7.21,2.18,1.91,3.28,4.26,2.63,7.16-.88,3.91-3.42,6.7-6.53,9.02-4.04,3.02-8.56,5.11-13.32,6.73-2.7.92-4.53,5.03-3.56,7.74.53,1.49,1.78,1.46,2.97,1.47,4.56.02,8.69-1.67,12.78-3.39,8.8-3.7,17.05-8.49,25.38-13.12,1.17-.65,2.03-1.55,2.68-2.72,8.84-15.74,18.82-30.78,28.23-46.16,1.3-2.13,2.49-4.33,3.7-6.51,1.3-2.35,3.28-3.72,5.92-4.11,1.18-.17,2.5-.49,3.31.72.76,1.13-.1,2.13-.65,3.06-2.87,4.87-6.42,9.28-9.71,13.86-8.15,11.34-16.6,22.49-23.04,34.95-.89,1.72-1.7,3.47-2.55,5.21ZM483.72,456.85c5.58-2.28,10.2-5.68,13.19-11.01.4-.71.72-1.67-.03-2.3-.64-.54-1.46-.04-2.05.34-4.93,3.25-8.39,7.77-11.12,12.97Z","M457.59,447.14c6.57-4.93,12.74-9.15,20.05-11.29,2.13-.62,4.28-1.21,6.5-1.35.73-.05,1.89-.48,2.09.64.15.81-.87,1.04-1.54,1.34-11.09,4.99-20.61,12.27-29.6,20.32-5.01,4.49-8.61,10.11-12.34,15.63-.53.78-.79,2.12-2.16,1.67-1.13-.37-1.3-1.55-1.42-2.53-.26-2.23.77-4.15,1.83-5.99,1.44-2.51,3-4.96,4.89-8.07-6.1,2-11.42,3.99-17.02,4.47-3.87.33-6.69,1.67-9,4.86-2,2.77-4.75,4.93-8.05,6.18-3.85,1.45-6.3.03-7.04-4.03-.36-1.98.06-3.88.58-5.75,1.97-7.06,6.17-12.78,11.21-17.9,2.37-2.41,6.23-2.34,8.88-.22.43.35.91.69.9,1.32-.01.69-.55.96-1.11,1.01-3.7.31-5.81,2.92-8.04,5.41-2.99,3.34-5.56,6.92-6.98,11.22-.35,1.05-.84,2.28.09,3.14,1.01.93,2.15.03,3.04-.47,1.51-.86,2.95-1.9,4.29-3.01.67-.56,1.5-1.39,1.03-2.39-1.71-3.56.76-5.5,2.83-7.58.58-.58,1.31-1.04,2.03-1.43,1.38-.75,2.89-1.75,4.38-.57,1.54,1.22.46,2.72-.12,4.02-.7,1.59-.19,2,1.4,1.8,6.37-.81,12.48-2.59,18.38-5.09,1.16-.49,2.02-1.28,2.56-2.42,1.57-3.26,3.02-6.55,3.36-10.22.08-.9-.03-2.01.99-2.42,1.14-.45,2.17.13,3.06.84,1.45,1.16,1.95,2.68,1.47,4.45-.33,1.24-.8,2.44-1.45,4.4Z","M118.57,517.03v17.83h-2.04v-17.83h2.04Z","M140.1,517.03l10.7,14.5v-14.5h2.01v17.83h-2.09l-10.7-14.47v14.47h-2.04v-17.83h2.11Z","M183.51,517.03v1.89h-5.83v15.95h-2.04v-15.95h-5.81v-1.89h13.68Z","M212.57,517.03v1.89h-10.06v5.99h8.99v1.86h-8.99v6.22h10.39v1.89h-12.43v-17.83h12.1Z","M242.74,534.87l-3.75-5.71c-.36.03-.74.05-1.15.05h-4.74v5.66h-2.04v-17.83h6.78c4.46,0,7.03,2.19,7.03,5.99,0,2.93-1.45,4.94-4.03,5.76l4.2,6.09h-2.32ZM237.84,527.33c3.24,0,5.07-1.45,5.07-4.26s-1.83-4.15-5.07-4.15h-4.74v8.41h4.74Z","M265.61,517.03l10.7,14.5v-14.5h2.01v17.83h-2.09l-10.7-14.47v14.47h-2.04v-17.83h2.11Z","M309.02,530.31h-9.71l-1.99,4.56h-2.17l8-17.83h2.11l7.97,17.83h-2.22l-2.01-4.56ZM308.21,528.42l-4.05-9.17-4,9.17h8.05Z","M337.27,518.84c-4.03,0-7.26,3.13-7.26,7.08s3.24,7.11,7.26,7.11c1.96,0,3.87-.81,5.27-2.14l1.25,1.35c-1.76,1.66-4.15,2.7-6.62,2.7-5.15,0-9.22-3.97-9.22-9.02s4.13-8.94,9.3-8.94c2.45,0,4.82.99,6.52,2.6l-1.22,1.48c-1.38-1.38-3.31-2.22-5.27-2.22Z","M363.51,517.03v17.83h-2.04v-17.83h2.04Z","M399.92,525.95c0,5.02-4.13,8.99-9.32,8.99s-9.35-3.97-9.35-8.99,4.13-8.97,9.35-8.97,9.32,3.95,9.32,8.97ZM383.31,525.95c0,3.95,3.31,7.13,7.29,7.13s7.24-3.19,7.24-7.13-3.26-7.08-7.24-7.08-7.29,3.13-7.29,7.08Z","M419.76,517.03l10.7,14.5v-14.5h2.01v17.83h-2.09l-10.7-14.47v14.47h-2.04v-17.83h2.11Z","M463.17,530.31h-9.71l-1.99,4.56h-2.17l8-17.83h2.11l7.97,17.83h-2.22l-2.01-4.56ZM462.36,528.42l-4.05-9.17-4,9.17h8.05Z","M486.25,517.03v15.95h7.82v1.89h-9.86v-17.83h2.04Z"];
+const LOGO_VB_W=612,LOGO_VB_H=596.35;
+function drawFullLogo(ctx,cx,cy,sz,col){const s=sz/LOGO_VB_H;ctx.save();ctx.translate(cx-(LOGO_VB_W*s)/2,cy-sz/2);ctx.scale(s,s);ctx.fillStyle=col;LOGO_PATHS.forEach(d=>ctx.fill(new Path2D(d)));ctx.restore();}
+function drawFlameIcon(ctx,cx,cy,sz,col){const s=sz/LOGO_VB_H;ctx.save();ctx.translate(cx-(LOGO_VB_W*s)/2,cy-sz/2);ctx.scale(s,s);ctx.fillStyle=col;for(let i=0;i<3;i++)ctx.fill(new Path2D(LOGO_PATHS[i]));ctx.restore();}
+
+// ── TAB SWITCH ──
+function setTab(tab) {
+  saveState();
+  currentTab = tab;
+  restoreState();
+
+  document.querySelectorAll('.tab').forEach(t => {
+    const isActive = t.dataset.tab === tab;
+    t.classList.toggle('active', isActive);
+  });
+  document.getElementById('panel-versiculo').style.display = tab==='versiculo' ? '' : 'none';
+  document.getElementById('panel-logo').style.display      = tab==='logo'       ? '' : 'none';
+
+  const isV = tab === 'versiculo';
+  const pillClass = isV ? 'tab-pill pill-v' : 'tab-pill pill-l';
+  const pillText  = isV ? 'Versículo' : 'Logo';
+  ['title-tab-pill','typo-tab-pill'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = pillClass; el.textContent = pillText; }
+  });
+
+  document.getElementById('tag-li').textContent  = isV ? 'lateral_izq'  : 'lat_logo_izq';
+  document.getElementById('tag-ce').textContent  = isV ? 'versiculo'     : 'central';
+  document.getElementById('tag-ld').textContent  = isV ? 'lateral_der'   : 'lat_logo_der';
+  document.getElementById('preview-label').textContent = isV
+    ? 'lateral_izq  /  versiculo  /  lateral_der'
+    : 'lat_logo_izq  /  central  /  lat_logo_der';
+
+  // Info bar
+  const dot = document.querySelector('#preview-info-bar .preview-info-dot');
+  const tabName = document.getElementById('info-tab-name');
+  if (dot) { dot.className = 'preview-info-dot ' + (isV ? 'dot-v' : 'dot-l'); }
+  if (tabName) tabName.textContent = isV ? 'Versículo' : 'Logo';
+
+  renderOverlayList();
+  render();
+}
+
+// ── BACKGROUND ──
+function loadBg(input){
+  const file=input.files[0]; if(!file) return;
+  const img=new Image();
+  img.onload=()=>{
+    bgImage=img;
+    const z=document.getElementById('bg-zone');
+    z.classList.add('has-file');
+    z.querySelector('.uz-main').textContent='✓ '+file.name;
+    z.querySelector('.uz-sub').textContent=img.naturalWidth+' × '+img.naturalHeight+' px';
+    document.getElementById('export-btn').disabled=false;
+    document.getElementById('bg-crop-controls').style.display='block';
+    document.getElementById('welcome-screen').style.display='none';
+    document.getElementById('preview-area').style.display='block';
+    // Update info bar
+    const nativeRatio = img.naturalWidth / TOTAL_W;
+    const nativeH = img.naturalHeight;
+    const natLatW = Math.round(LAT_W * nativeRatio);
+    const natCenW = Math.round(CENTER_W * nativeRatio);
+    const dpi = Math.round(img.naturalWidth / 18); // 1800px / 18in = dpi approx
+    document.getElementById('info-dimensions').textContent = `${img.naturalWidth} × ${nativeH}`;
+    document.getElementById('info-dpi').textContent = `${dpi} dpi`;
+    setPreviewZoom(document.getElementById('preview-area').style.display === 'none' ? 100 : currentZoom);
+    adjustZoom(0); // auto-fit to width
+    render();
+  };
+  img.src=URL.createObjectURL(file);
+}
+
+// ── PREVIEW ZOOM ──
+function setPreviewZoom(pct) {
+  currentZoom = +pct;
+  const z = currentZoom / 100;
+  document.getElementById('preview-zoom-val').textContent = currentZoom + '%';
+  const latPx  = Math.round(LAT_W    * z);
+  const centPx = Math.round(CENTER_W * z);
+  const hPx    = Math.round(H        * z);
+  const setSize = (id, w, h) => {
+    const el = document.getElementById(id);
+    if (el) { el.style.width = w+'px'; el.style.height = h+'px'; }
+  };
+  setSize('pw-li', latPx,  hPx); setSize('cv-li', latPx,  hPx);
+  setSize('pw-ce', centPx, hPx); setSize('cv-ce', centPx, hPx);
+  setSize('pw-ld', latPx,  hPx); setSize('cv-ld', latPx,  hPx);
+}
+
+// ── CUSTOM FONTS ──
+async function loadCustomFont(input,slot){
+  const file=input.files[0]; if(!file) return;
+  const name='CF_'+slot+'_'+Date.now();
+  try{
+    const font=new FontFace(name,`url(${URL.createObjectURL(file)})`);
+    await font.load(); document.fonts.add(font);
+    const sel=document.getElementById('font-'+slot);
+    const opt=new Option('✓ '+file.name.replace(/\.[^.]+$/,''),`'${name}', sans-serif`);
+    sel.add(opt); sel.value=`'${name}', sans-serif`;
+    const tag=document.getElementById('custom-font-'+slot+'-tag');
+    tag.textContent='✓ '+file.name; tag.style.display='inline-block';
+    saveAndRender();
+  }catch(e){alert('No se pudo cargar la fuente: '+e.message);}
+}
+
+// ── SVG HELPERS ──
+// Returns { colorGroups, cssClassMap, styleEls }
+// cssClassMap: Map of normalized-color → Set of CSS class selectors that have that color
+// styleEls: the actual <style> DOM nodes (so we can rewrite them)
+function extractSvgColorGroups(svgDoc){
+  const map = new Map(); // normalizedColor → group
+
+  function norm(c){
+    if(!c||c==='none'||c==='transparent') return null;
+    c=c.trim().toLowerCase();
+    if(c==='inherit'||c==='currentcolor') return '__inherit__';
+    try {
+      const tmp=document.createElement('canvas').getContext('2d');
+      tmp.fillStyle=c; return tmp.fillStyle;
+    } catch(e){ return null; }
+  }
+
+  // 1. Parse <style> blocks — build cssRules: [{selector, attr, rawColor, normalizedColor}]
+  // Also collect all style elements so we can rewrite them later
+  const styleEls = Array.from(svgDoc.querySelectorAll('style'));
+  const cssRules = []; // { selector, attr, rawColor, normColor }
+
+  styleEls.forEach(styleEl => {
+    const text = styleEl.textContent || '';
+    const ruleRe = /([^{]+)\{([^}]+)\}/g;
+    let m;
+    while ((m = ruleRe.exec(text)) !== null) {
+      const selectors = m[1].trim().split(',').map(s => s.trim()).filter(Boolean);
+      const declarations = m[2];
+      const propRe = /(fill|stroke)\s*:\s*([^;!\n]+)/g;
+      let pm;
+      while ((pm = propRe.exec(declarations)) !== null) {
+        const attr = pm[1].trim();
+        const rawColor = pm[2].trim();
+        const nc = norm(rawColor);
+        if (!nc) continue;
+        selectors.forEach(sel => {
+          cssRules.push({ selector: sel, attr, rawColor, normColor: nc, styleEl });
+        });
+      }
+    }
+  });
+
+  // Build a fast lookup: class name (without dot) → [{attr, normColor, ruleRef}]
+  const classColorMap = new Map(); // className → [{attr, normColor, cssRule}]
+  cssRules.forEach(rule => {
+    const sel = rule.selector;
+    if (sel.startsWith('.')) {
+      const cls = sel.slice(1);
+      if (!classColorMap.has(cls)) classColorMap.set(cls, []);
+      classColorMap.get(cls).push(rule);
+    }
+  });
+
+  // Register CSS-defined colors into map (these elements have NO inline attr)
+  svgDoc.querySelectorAll('*').forEach(el => {
+    Array.from(el.classList).forEach(cls => {
+      const rules = classColorMap.get(cls);
+      if (!rules) return;
+      rules.forEach(rule => {
+        const nc = rule.normColor;
+        if (!map.has(nc)) map.set(nc, { originalColor: nc, currentColor: nc, elements: [], cssRules: [] });
+        const grp = map.get(nc);
+        // Store the CSS rule reference (deduplicated by selector+attr)
+        const key = rule.selector + '|' + rule.attr;
+        if (!grp.cssRules.find(r => r.selector+r.attr === rule.selector+rule.attr)) {
+          grp.cssRules.push(rule);
+        }
+        // We don't push individual elements for CSS-based colors since we'll rewrite the rule
+      });
+    });
+  });
+
+  // 2. Presentation attributes / inline styles on elements
+  svgDoc.querySelectorAll('*').forEach(el=>{
+    ['fill','stroke'].forEach(attr=>{
+      let v = el.style[attr];
+      if (!v || v === 'none' || v === 'transparent') v = el.getAttribute(attr);
+      if (!v || v === 'none' || v === 'transparent') return;
+      const nc = norm(v); if(!nc) return;
+      if(!map.has(nc)) map.set(nc, { originalColor:nc, currentColor:nc, elements:[], cssRules:[] });
+      map.get(nc).elements.push({el, attr, originalVal:v});
+    });
+  });
+
+  return { colorGroups: Array.from(map.values()), styleEls };
+}
+
+function svgToDataURL(svgDoc){
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svgDoc));
+}
+function rebuildSvgImage(ov){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{ov.img=img;resolve();};
+    img.src=svgToDataURL(ov.svgDoc);
+  });
+}
+
+// ── ADD OVERLAY ──
+function addOverlay(input){
+  const file=input.files[0]; if(!file) return; input.value='';
+  const isSvg=file.type==='image/svg+xml'||file.name.toLowerCase().endsWith('.svg');
+  const url=URL.createObjectURL(file);
+  if(isSvg){
+    fetch(url).then(r=>r.text()).then(txt=>{
+      const doc=new DOMParser().parseFromString(txt,'image/svg+xml');
+      const svgEl=doc.querySelector('svg');
+      if(svgEl&&!svgEl.getAttribute('viewBox')){
+        const w=parseFloat(svgEl.getAttribute('width'))||800;
+        const h=parseFloat(svgEl.getAttribute('height'))||600;
+        svgEl.setAttribute('viewBox',`0 0 ${w} ${h}`);
+      }
+      const { colorGroups, styleEls } = extractSvgColorGroups(doc);
+      const dataUrl = svgToDataURL(doc);
+      const img=new Image();
+      img.onload=()=>{
+        tabOverlays[currentTab].push({
+          id:Date.now(), img, svgDoc:doc, colorGroups, styleEls,
+          isSvg:true, name:file.name,
+          opacity:1, x:0, y:0, scale:100, rotation:0,
+          zones:new Set(['li','ce','ld']), open:true
+        });
+        renderOverlayList(); render();
+      };
+      img.src=dataUrl;
+    });
+  } else {
+    const img=new Image();
+    img.onload=()=>{
+      tabOverlays[currentTab].push({id:Date.now(),img,isSvg:false,name:file.name,opacity:1,x:0,y:0,scale:100,rotation:0,tintColor:'#ffffff',tintEnabled:false,zones:new Set(['li','ce','ld']),open:true});
+      renderOverlayList(); render();
+    };
+    img.src=url;
+  }
+}
+
+function renderOverlayList(){
+  const list=document.getElementById('overlay-list'); list.innerHTML='';
+  const zn={li:'lat izq',ce:'centro',ld:'lat der'};
+  tabOverlays[currentTab].forEach(ov=>{
+    const div=document.createElement('div'); div.className='overlay-item';
+    const hdr=document.createElement('div'); hdr.className='overlay-header';
+    hdr.innerHTML=`<div class="overlay-header-left"><span class="overlay-type-badge ${ov.isSvg?'badge-svg':'badge-png'}">${ov.isSvg?'SVG':'PNG'}</span><span class="overlay-name" title="${ov.name}">${ov.name}</span></div><div class="overlay-header-right"><button class="overlay-remove" onclick="removeOverlay(${ov.id});event.stopPropagation()">×</button><span class="overlay-chevron ${ov.open?'open':''}">▼</span></div>`;
+    hdr.addEventListener('click',()=>{ov.open=!ov.open;renderOverlayList();});
+    div.appendChild(hdr);
+    if(ov.open){
+      const body=document.createElement('div'); body.className='overlay-body';
+      body.innerHTML=`<div class="overlay-transform">
+        <div class="ot-field"><label>Opacidad <span class="ot-val" id="op-${ov.id}">${Math.round(ov.opacity*100)}%</span></label><input type="range" min="0" max="100" value="${Math.round(ov.opacity*100)}" oninput="updOv(${ov.id},'opacity',this.value/100);document.getElementById('op-${ov.id}').textContent=this.value+'%'"></div>
+        <div class="ot-field"><label>Escala <span class="ot-val" id="sc-${ov.id}">${ov.scale}%</span></label><input type="range" min="10" max="300" value="${ov.scale}" oninput="updOv(${ov.id},'scale',+this.value);document.getElementById('sc-${ov.id}').textContent=this.value+'%'"></div>
+        <div class="ot-field"><label>Rotación <span class="ot-val" id="ro-${ov.id}">${ov.rotation||0}°</span></label><input type="range" min="-180" max="180" value="${ov.rotation||0}" oninput="updOv(${ov.id},'rotation',+this.value);document.getElementById('ro-${ov.id}').textContent=this.value+'°'"></div>
+        <div class="ot-field"><label>Offset X <span class="ot-val" id="ox-${ov.id}">${ov.x||0}px</span></label><input type="range" min="-600" max="600" value="${ov.x||0}" oninput="updOv(${ov.id},'x',+this.value);document.getElementById('ox-${ov.id}').textContent=this.value+'px'"></div>
+        <div class="ot-field"><label>Offset Y <span class="ot-val" id="oy-${ov.id}">${ov.y||0}px</span></label><input type="range" min="-600" max="600" value="${ov.y||0}" oninput="updOv(${ov.id},'y',+this.value);document.getElementById('oy-${ov.id}').textContent=this.value+'px'"></div>
+      </div>
+      <div class="overlay-zone-row">${['li','ce','ld'].map(z=>`<button class="oz-btn ${ov.zones.has(z)?'active':''}" onclick="toggleZone(${ov.id},'${z}')">${zn[z]}</button>`).join('')}</div>`;
+      // PNG tint controls
+      if(!ov.isSvg) {
+        const tintSec = document.createElement('div');
+        tintSec.style.cssText = 'border-top:1px solid var(--border);padding-top:8px;margin-top:2px';
+        const tintEnabled = ov.tintEnabled || false;
+        const tintCol = ov.tintColor || '#ffffff';
+        tintSec.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${tintEnabled?'8px':'0'}">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted)">Tinte de color</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--muted2)">
+              <input type="checkbox" id="tint-en-${ov.id}" ${tintEnabled?'checked':''} 
+                onchange="updOv(${ov.id},'tintEnabled',this.checked);renderOverlayList()"
+                style="accent-color:var(--accent);cursor:pointer">
+              Activar
+            </label>
+          </div>
+          ${tintEnabled ? `
+          <div style="display:flex;align-items:center;gap:7px">
+            <input type="color" id="tint-cp-${ov.id}" value="${tintCol}"
+              style="width:32px;height:30px;padding:2px;border-radius:6px;cursor:pointer;background:var(--card);border:1px solid var(--border2);flex-shrink:0"
+              oninput="updOv(${ov.id},'tintColor',this.value);document.getElementById('tint-hex-${ov.id}').value=this.value">
+            <input type="text" id="tint-hex-${ov.id}" value="${tintCol}" maxlength="7" placeholder="#ffffff"
+              style="flex:1;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;color:var(--text);font-size:11px;font-family:Menlo,monospace;outline:none;height:30px"
+              oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('tint-cp-${ov.id}').value=this.value;updOv(${ov.id},'tintColor',this.value)}">
+          </div>` : ''}`;
+        body.appendChild(tintSec);
+      }
+
+      if(ov.isSvg&&ov.colorGroups&&ov.colorGroups.length){        const sec=document.createElement('div'); sec.className='svg-colors';
+        sec.innerHTML='<div class="svg-colors-title">Colores SVG</div>';
+        const cl=document.createElement('div'); cl.className='color-layer-list';
+        ov.colorGroups.forEach((grp,gi)=>{
+          const row=document.createElement('div'); row.className='color-layer';
+          const dc=grp.currentColor==='__inherit__'?'#888888':grp.currentColor;
+          const lbl=grp.originalColor==='__inherit__'?'heredado':grp.originalColor;
+          row.innerHTML=`<div class="color-layer-swatch" id="sw-${ov.id}-${gi}" style="background:${dc}"></div><div class="color-layer-info"><div class="color-layer-label" title="${lbl}">${lbl}</div><div class="color-layer-count">${grp.elements.length} elemento${grp.elements.length!==1?'s':''}</div></div><input type="color" id="cp-${ov.id}-${gi}" value="${dc}" oninput="changeSvgColor(${ov.id},${gi},this.value);document.getElementById('ch-${ov.id}-${gi}').value=this.value"><input type="text" id="ch-${ov.id}-${gi}" value="${dc}" maxlength="7" placeholder="#000000" style="width:72px;background:#fff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:3px 7px;color:#1c1c1e;font-size:10px;font-family:Menlo,monospace;outline:none;letter-spacing:0.04em" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('cp-${ov.id}-${gi}').value=this.value;changeSvgColor(${ov.id},${gi},this.value)}">`;
+          cl.appendChild(row);
+        });
+        const ab=document.createElement('button'); ab.className='apply-all-btn'; ab.textContent='Aplicar un color a todo el SVG';
+        ab.onclick=()=>{const c=prompt('Color hex (ej. #ffffff):','#ffffff');if(c)ov.colorGroups.forEach((_,gi)=>changeSvgColor(ov.id,gi,c));};
+        sec.appendChild(cl); sec.appendChild(ab); body.appendChild(sec);
+      } else if(ov.isSvg) {
+        const note=document.createElement('div');
+        note.style.cssText='font-size:10px;color:var(--muted);padding-top:6px;border-top:0.5px solid var(--border)';
+        note.textContent='No se detectaron colores editables. Asegúrate de exportar el SVG con atributos de presentación (no CSS interno).';
+        body.appendChild(note);
+      }
+      div.appendChild(body);
+    }
+    list.appendChild(div);
+  });
+}
+
+function updOv(id,k,v){const o=tabOverlays[currentTab].find(x=>x.id===id);if(o){o[k]=v;render();}}
+function removeOverlay(id){tabOverlays[currentTab]=tabOverlays[currentTab].filter(o=>o.id!==id);renderOverlayList();render();}
+function toggleZone(id,z){const o=tabOverlays[currentTab].find(x=>x.id===id);if(!o)return;o.zones.has(z)?o.zones.delete(z):o.zones.add(z);renderOverlayList();render();}
+async function changeSvgColor(ovId,gi,col){
+  const ov=tabOverlays[currentTab].find(o=>o.id===ovId); if(!ov||!ov.svgDoc)return;
+  const grp=ov.colorGroups[gi];
+  grp.currentColor=col;
+
+  // Update swatch
+  const sw=document.getElementById(`sw-${ovId}-${gi}`); if(sw)sw.style.background=col;
+
+  // 1. Rewrite presentation attribute elements
+  grp.elements.forEach(({el,attr})=>{
+    el.setAttribute(attr,col);
+    if(el.style[attr]) el.style[attr]=col;
+  });
+
+  // 2. Rewrite CSS <style> block rules for class-based colors
+  if(grp.cssRules && grp.cssRules.length) {
+    // Collect affected styleEls and rewrite their text
+    const affectedStyleEls = new Set(grp.cssRules.map(r => r.styleEl));
+    affectedStyleEls.forEach(styleEl => {
+      let text = styleEl.textContent || '';
+      // For each rule in this group that belongs to this styleEl, replace the color
+      grp.cssRules.filter(r => r.styleEl === styleEl).forEach(rule => {
+        // Replace: .selector { ... fill: OLD; ... } → fill: NEW
+        // Use a regex that matches the property inside the rule block
+        const selectorEscaped = rule.selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Replace the specific property value inside the selector's block
+        const blockRe = new RegExp(
+          '(' + selectorEscaped + '\\s*\\{[^}]*)(' + rule.attr + '\\s*:\\s*)([^;\\n}]+)',
+          'g'
+        );
+        text = text.replace(blockRe, (_, pre, prop, _oldVal) => {
+          return pre + prop + col;
+        });
+        // Update the stored rawColor so future serialization is correct
+        rule.rawColor = col;
+        rule.normColor = col;
+      });
+      styleEl.textContent = text;
+    });
+  }
+
+  await rebuildSvgImage(ov); render();
+}
+
+// ── DRAW HELPERS ──
+function drawBg(ctx, cW, cH, offX) {
+  if (!bgImage) { ctx.fillStyle='#e8e8ed'; ctx.fillRect(0,0,cW,cH); return; }
+  const iw = bgImage.naturalWidth;
+  const ih = bgImage.naturalHeight;
+
+  // bg-scale: 100% = fill width to TOTAL_W. >100% zooms in, <100% zooms out.
+  const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
+  // bg-vy: 0% = top, 50% = center, 100% = bottom
+  const vyPct = +(document.getElementById('bg-vy')?.value || 50) / 100;
+
+  // At scale=1, image width maps to TOTAL_W.
+  // Effective image width in canvas-px: TOTAL_W * scalePct
+  // So 1 canvas-px = iw / (TOTAL_W * scalePct) image-px
+  const canvasToImg = iw / (TOTAL_W * scalePct);
+
+  // Source x: offset into image for this zone
+  const sx = offX * canvasToImg;
+  const sw = cW   * canvasToImg;
+
+  // Source height at this scale
+  const scaledImgH = ih / canvasToImg; // how tall the image appears in canvas units
+  // vertical offset: how many canvas-px of image are above the top of the canvas
+  const overflowH = Math.max(0, scaledImgH - cH);
+  const cropTopCanvas = overflowH * vyPct;
+  const sy = cropTopCanvas * canvasToImg;
+  const sh = cH * canvasToImg;
+
+  // Clamp to valid source bounds
+  const clampedSy = Math.max(0, Math.min(ih - sh, sy));
+  const clampedSh = Math.min(ih - clampedSy, sh);
+
+  ctx.drawImage(bgImage, sx, clampedSy, sw, clampedSh, 0, 0, cW, cH);
+}
+function drawOverlays(ctx,cW,cH,zk){
+  tabOverlays[currentTab].forEach(ov=>{
+    if(!ov.zones.has(zk)||!ov.img)return;
+    const s=ov.scale/100, dw=ov.img.naturalWidth*s, dh=ov.img.naturalHeight*s;
+    const cx=(cW-dw)/2+ov.x, cy=(cH-dh)/2+ov.y;
+    ctx.save();
+    ctx.globalAlpha=ov.opacity;
+
+    // For PNG overlays with a tint color, use source-atop composite to colorize
+    if(!ov.isSvg && ov.tintColor && ov.tintColor !== '#ffffff' && ov.tintEnabled) {
+      // Draw image to offscreen canvas, tint it, then draw result
+      const off = document.createElement('canvas');
+      off.width = Math.ceil(dw); off.height = Math.ceil(dh);
+      const octx = off.getContext('2d');
+      octx.drawImage(ov.img, 0, 0, dw, dh);
+      octx.globalCompositeOperation = 'source-atop';
+      octx.fillStyle = ov.tintColor;
+      octx.fillRect(0, 0, dw, dh);
+      if(ov.rotation){
+        ctx.translate(cx+dw/2, cy+dh/2);
+        ctx.rotate(ov.rotation*Math.PI/180);
+        ctx.drawImage(off,-dw/2,-dh/2,dw,dh);
+      } else {
+        ctx.drawImage(off,cx,cy,dw,dh);
+      }
+    } else {
+      if(ov.rotation){
+        ctx.translate(cx+dw/2, cy+dh/2);
+        ctx.rotate((ov.rotation||0)*Math.PI/180);
+        ctx.drawImage(ov.img,-dw/2,-dh/2,dw,dh);
+      } else {
+        ctx.drawImage(ov.img,cx,cy,dw,dh);
+      }
+    }
+    ctx.restore();
+  });
+}
+
+// Read title settings from the CURRENT tab's state
+function getTitleSettings() {
+  const s = tabState[currentTab];
+  const rawLines = (s.lines||'').split('/').map(l => l.trim());
+  return {
+    lines: rawLines,
+    fontD: s.fontDisplay||'sans-serif', fontS: s.fontSub||'sans-serif',
+    fsD: +s.fsDisplay||72, fsS: +s.fsSub||28,
+    fw: s.fwDisplay||'700', fst: s.fstyleDisplay||'normal',
+    fwS: s.fwSub||'400', fstS: s.fstyleSub||'normal',
+    col: s.textColor||'#ffffff', align: s.textAlign||'center',
+    vy: +s.vy/100||0.5, mx: +s.mx||40, lh: +s.lh||1.15
+  };
+}
+
+function drawTitle(ctx,w,h){
+  const t=getTitleSettings();
+  const lines = t.lines.filter(l => l.length > 0);
+  if(!lines.length) return;
+  ctx.textAlign=t.align;
+  const xP=t.align==='center'?w/2:t.align==='left'?t.mx:w-t.mx;
+
+  let totalH = 0;
+  lines.forEach((_, i) => {
+    const isDisplay = i % 2 === 0;
+    totalH += (isDisplay ? t.fsD : t.fsS) * t.lh;
+  });
+
+  let y = h * t.vy - totalH / 2;
+  lines.forEach((line, i) => {
+    const isDisplay = i % 2 === 0;
+    const fs = isDisplay ? t.fsD : t.fsS;
+    const font = isDisplay
+      ? `${t.fst} ${t.fw} ${fs}px ${t.fontD}`
+      : `${t.fstS} ${t.fwS} ${fs}px ${t.fontS}`;
+    ctx.font = font;
+    ctx.fillStyle = t.col;
+    ctx.fillText(line, xP, y + fs * 0.8);
+    y += fs * t.lh;
+  });
+}
+
+function drawLateral(ctx,w,h,zk){
+  if(currentTab==='versiculo'){
+    drawTitle(ctx,w,h);
+    if(document.getElementById('show-icon').value==='1'){
+      const sz=+document.getElementById('icon-size').value||100;
+      drawIcon(ctx,w/2,h-sz/2-30,sz,document.getElementById('icon-color').value);
+    }
+  } else {
+    const logoType = document.getElementById('logo-type')?.value || 'mth';
+    if (logoType !== 'none') {
+      const sz  = +document.getElementById('logo-size').value||200;
+      const col = document.getElementById('logo-color').value;
+      const vy  = +document.getElementById('logo-vy').value/100;
+      if (logoType === 'identidad') {
+        drawIdentidadLogo(ctx, w/2, h*vy, sz, col);
+      } else {
+        drawFullLogo(ctx, w/2, h*vy, sz, col);
+      }
+    }
+  }
+  drawOverlays(ctx,w,h,zk);
+}
+function drawCenter(ctx,w,h){
+  if(currentTab==='logo') drawTitle(ctx,w,h);
+  drawOverlays(ctx,w,h,'ce');
+}
+// sc() — set up canvas at devicePixelRatio for sharp rendering.
+// logicalW/H = the slide's true pixel dimensions (always 300 or 1200 × 600).
+// Canvas buffer = logicalW*DPR so it looks sharp; CSS display size is set by setPreviewZoom.
+// DPR: target ~150dpi preview. Standard screen = 96dpi, so 150/96 ≈ 1.56×.
+// On a 2× Retina screen (192dpi effective), use devicePixelRatio directly for max sharpness.
+const DPR = window.devicePixelRatio || 1;
+
+function sc(id, logicalW, logicalH) {
+  const c = document.getElementById(id);
+  c.width  = Math.round(logicalW  * DPR);
+  c.height = Math.round(logicalH * DPR);
+  const ctx = c.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return ctx;
+}
+
+function render(){
+  const li=sc('cv-li',LAT_W,H); drawBg(li,LAT_W,H,0); drawLateral(li,LAT_W,H,'li');
+  const ce=sc('cv-ce',CENTER_W,H); drawBg(ce,CENTER_W,H,LAT_W); drawCenter(ce,CENTER_W,H);
+  const ld=sc('cv-ld',LAT_W,H); drawBg(ld,LAT_W,H,LAT_W+CENTER_W); drawLateral(ld,LAT_W,H,'ld');
+}
+
+function exportAll(){
+  const isV=currentTab==='versiculo';
+  const names=isV?['lateral_izq','versiculo','lateral_der']:['lat_logo_izq','central','lat_logo_der'];
+
+  // Scale factor: how much bigger than logical size to export.
+  // We scale by the horizontal ratio (imageWidth / TOTAL_W), capped at 4× to avoid
+  // absurd file sizes from very high-res source images.
+  const nativeRatio = bgImage ? Math.min(4, bgImage.naturalWidth / TOTAL_W) : 1;
+
+  const logicalWidths  = [LAT_W, CENTER_W, LAT_W];
+  const logicalOffsets = [0, LAT_W, LAT_W + CENTER_W];
+  const zones = ['li','ce','ld'];
+
+  const results=document.getElementById('results'); results.innerHTML='';
+
+  names.forEach((name, i) => {
+    const lw = logicalWidths[i];
+    // Export size: scale logical dimensions by nativeRatio — always correct aspect ratio
+    const nw = Math.round(lw * nativeRatio);
+    const nh = Math.round(H  * nativeRatio); // H=600, so aspect ratio is always preserved
+
+    const c = document.createElement('canvas');
+    c.width = nw; c.height = nh;
+    const ctx = c.getContext('2d');
+
+    // Draw background slice at native resolution
+    if (bgImage) {
+      const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
+      const vyPct    = +(document.getElementById('bg-vy')?.value    || 50)  / 100;
+      const iw = bgImage.naturalWidth, ih = bgImage.naturalHeight;
+      const canvasToImg = iw / (TOTAL_W * scalePct);
+      const sx = logicalOffsets[i] * canvasToImg;
+      const sw = lw * canvasToImg;
+      const scaledImgH = ih / canvasToImg;
+      const overflowH  = Math.max(0, scaledImgH - H);
+      const sy = Math.max(0, Math.min(ih - H * canvasToImg, overflowH * vyPct * canvasToImg));
+      const sh = Math.min(ih - sy, H * canvasToImg);
+      ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, nw, nh);
+    } else {
+      ctx.fillStyle='#e8e8ed'; ctx.fillRect(0,0,nw,nh);
+    }
+
+    // Scale context so logical drawing coords map to native canvas size
+    ctx.save();
+    ctx.scale(nativeRatio, nativeRatio);
+    if (i !== 1) drawLateral(ctx, lw, H, zones[i]);
+    else drawCenter(ctx, lw, H);
+    ctx.restore();
+
+    // Thumbnail for results panel
+    const th=document.createElement('canvas');
+    const ts=Math.min(1, 140/nw);
+    th.width=Math.round(nw*ts); th.height=Math.round(nh*ts);
+    th.getContext('2d').drawImage(c,0,0,th.width,th.height);
+
+    const chip=document.createElement('div'); chip.className='result-chip'; chip.appendChild(th);
+    const footer=document.createElement('div'); footer.className='result-chip-footer';
+    footer.innerHTML=`<span>${name}<br>${nw}×${nh}px</span>`;
+    const dl=document.createElement('a');
+    dl.textContent='PNG';
+    dl.href=c.toDataURL('image/png');
+    dl.download=name+'.png';
+    footer.appendChild(dl); chip.appendChild(footer); results.appendChild(chip);
+  });
+
+  document.getElementById('results-section').style.display='block';
+  document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
