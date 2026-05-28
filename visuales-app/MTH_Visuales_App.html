@@ -182,6 +182,209 @@ body {
 /* Divider */
 .divider { height: 1px; background: var(--border); margin: 4px 0; }
 
+/* ─── EXPORT MODAL ─── */
+.export-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.export-modal {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  max-width: 480px;
+  width: 90%;
+  animation: modalSlideIn 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.export-modal h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.export-modal > p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.export-option {
+  padding: 16px 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: 12px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.export-option:hover {
+  border-color: var(--focus);
+  background: var(--focus-ring);
+  transform: translateY(-1px);
+}
+
+.export-option:active {
+  transform: translateY(0);
+}
+
+.export-option strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.export-option span {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.export-btn {
+  flex: 1; padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  text-align: center;
+}
+
+.export-btn.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.export-btn.primary:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.export-btn.primary:active {
+  transform: scale(0.98);
+}
+
+.export-btn.secondary {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.export-btn.secondary:hover {
+  background: var(--surface3);
+}
+
+/* Sidebar export button */
+.sidebar .export-btn {
+  width: 100%; padding: 8px 12px;
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 600;
+  font-family: inherit; letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+.sidebar .export-btn:hover { opacity: 0.82; transform: translateY(-1px); }
+.sidebar .export-btn:active { transform: scale(0.98); }
+.sidebar .export-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* Download confirmation panel */
+.download-confirmation {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1.5px solid var(--border2);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.download-confirmation-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.download-confirmation-content {
+  flex: 1;
+}
+
+.download-confirmation-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.download-confirmation-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.download-confirmation-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.download-confirmation-actions button {
+  padding: 6px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.download-confirmation-actions button:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.download-confirmation-actions button:active {
+  transform: scale(0.96);
+}
+
 /* Upload zone */
 .upload-zone {
   display: flex; flex-direction: column; align-items: center;
@@ -455,20 +658,6 @@ input[type=range] {
 }
 
 /* Export button */
-.export-btn {
-  width: 100%; padding: 11px 16px;
-  background: var(--accent); color: var(--accent-text);
-  border: none; border-radius: var(--r);
-  font-size: 13px; font-weight: 600;
-  font-family: inherit; letter-spacing: -0.01em;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
-  margin-top: 4px;
-}
-.export-btn:hover { opacity: 0.82; transform: translateY(-1px); }
-.export-btn:active { transform: scale(0.98); }
-.export-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-
 /* ─── MAIN ─── */
 .main { padding: 32px 28px; overflow-y: auto; background: var(--bg); }
 
@@ -939,7 +1128,9 @@ input[type=range] {
   </div>
 
   <div class="divider"></div>
-  <button class="export-btn" id="export-btn" onclick="exportAll()" disabled>Exportar 3 archivos</button>
+  <div style="padding: 0 2px;">
+    <button class="export-btn" id="export-btn" onclick="exportAll()" disabled>Exportar</button>
+  </div>
 </aside>
 
 <main class="main">
@@ -1818,74 +2009,468 @@ function render(){
   const ld=sc('cv-ld',LAT_W,H); drawBg(ld,LAT_W,H,LAT_W+CENTER_W); drawLateral(ld,LAT_W,H,'ld');
 }
 
-function exportAll(){
-  const isV=currentTab==='versiculo';
-  const names=isV?['lateral_izq','versiculo','lateral_der']:['lat_logo_izq','central','lat_logo_der'];
+// Show export modal with options
+function showExportModal() {
+  const modal = document.getElementById('export-modal-overlay');
+  modal.style.display = 'flex';
+}
 
-  // Scale factor: how much bigger than logical size to export.
-  // We scale by the horizontal ratio (imageWidth / TOTAL_W), capped at 4× to avoid
-  // absurd file sizes from very high-res source images.
+function closeExportModal() {
+  document.getElementById('export-modal-overlay').style.display = 'none';
+}
+
+// Handle export based on selection
+async function handleExport(exportType) {
+  closeExportModal();
+  
+  if (exportType === 'current-zip-downloads') {
+    await downloadZipToDownloads(false);
+  } else if (exportType === 'all-zip-downloads') {
+    await downloadZipToDownloads(true);
+  } else if (exportType === 'current-zip') {
+    await exportImagesAsZip(false);
+  } else if (exportType === 'all-zip') {
+    await exportImagesAsZip(true);
+  } else if (exportType === 'current-individual') {
+    await exportImagesIndividual(false);
+  } else if (exportType === 'all-individual') {
+    await exportImagesIndividual(true);
+  }
+}
+
+// Request directory handle for saving
+async function getDownloadDirectory() {
+  try {
+    const dirHandle = await window.showDirectoryPicker();
+    return dirHandle;
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      alert('Error selecting folder: ' + err.message);
+    }
+    return null;
+  }
+}
+
+// Simple function to create a ZIP file from canvas images
+async function createZipFileBlob(imageData) {
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+  
+  return new Promise((resolve) => {
+    script.onload = async () => {
+      const zip = new JSZip();
+      
+      imageData.forEach(({ name, dataUrl }) => {
+        const base64 = dataUrl.split(',')[1];
+        zip.file(name, base64, { base64: true });
+      });
+      
+      const content = await zip.generateAsync({ type: 'blob' });
+      resolve(content);
+    };
+    document.head.appendChild(script);
+  });
+}
+
+// Download ZIP directly to browser downloads (no folder picker)
+async function downloadZipToDownloads(exportAll) {
+  let imageConfigs = [];
+  
+  if (exportAll) {
+    imageConfigs.push(
+      { tab: 'versiculo', names: ['lateral_izq', 'versiculo', 'lateral_der'] },
+      { tab: 'logo', names: ['lat_logo_izq', 'logo_central', 'lat_logo_der'] }
+    );
+  } else {
+    const isV = currentTab === 'versiculo';
+    const names = isV ? ['lateral_izq', 'versiculo', 'lateral_der'] : ['lat_logo_izq', 'logo_central', 'lat_logo_der'];
+    imageConfigs.push({ tab: currentTab, names: names });
+  }
+
+  const results = document.getElementById('results');
+  results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--muted);"><p>⏳ Preparando descarga...</p></div>';
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+
+  const logicalWidths = [LAT_W, CENTER_W, LAT_W];
+  const logicalOffsets = [0, LAT_W, LAT_W + CENTER_W];
+  const zones = ['li', 'ce', 'ld'];
   const nativeRatio = bgImage ? Math.min(4, bgImage.naturalWidth / TOTAL_W) : 1;
 
-  const logicalWidths  = [LAT_W, CENTER_W, LAT_W];
-  const logicalOffsets = [0, LAT_W, LAT_W + CENTER_W];
-  const zones = ['li','ce','ld'];
+  const imageData = [];
 
-  const results=document.getElementById('results'); results.innerHTML='';
-
-  names.forEach((name, i) => {
-    const lw = logicalWidths[i];
-    // Export size: scale logical dimensions by nativeRatio — always correct aspect ratio
-    const nw = Math.round(lw * nativeRatio);
-    const nh = Math.round(H  * nativeRatio); // H=600, so aspect ratio is always preserved
-
-    const c = document.createElement('canvas');
-    c.width = nw; c.height = nh;
-    const ctx = c.getContext('2d');
-
-    // Draw background slice at native resolution
-    if (bgImage) {
-      const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
-      const vyPct    = +(document.getElementById('bg-vy')?.value    || 50)  / 100;
-      const iw = bgImage.naturalWidth, ih = bgImage.naturalHeight;
-      const canvasToImg = iw / (TOTAL_W * scalePct);
-      const sx = logicalOffsets[i] * canvasToImg;
-      const sw = lw * canvasToImg;
-      const scaledImgH = ih / canvasToImg;
-      const overflowH  = Math.max(0, scaledImgH - H);
-      const sy = Math.max(0, Math.min(ih - H * canvasToImg, overflowH * vyPct * canvasToImg));
-      const sh = Math.min(ih - sy, H * canvasToImg);
-      ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, nw, nh);
-    } else {
-      ctx.fillStyle='#e8e8ed'; ctx.fillRect(0,0,nw,nh);
+  imageConfigs.forEach(config => {
+    const originalTab = currentTab;
+    if (exportAll) {
+      currentTab = config.tab;
     }
 
-    // Scale context so logical drawing coords map to native canvas size
-    ctx.save();
-    ctx.scale(nativeRatio, nativeRatio);
-    if (i !== 1) drawLateral(ctx, lw, H, zones[i]);
-    else drawCenter(ctx, lw, H);
-    ctx.restore();
+    config.names.forEach((name, i) => {
+      const lw = logicalWidths[i];
+      const nw = Math.round(lw * nativeRatio);
+      const nh = Math.round(H * nativeRatio);
 
-    // Thumbnail for results panel
-    const th=document.createElement('canvas');
-    const ts=Math.min(1, 140/nw);
-    th.width=Math.round(nw*ts); th.height=Math.round(nh*ts);
-    th.getContext('2d').drawImage(c,0,0,th.width,th.height);
+      const c = document.createElement('canvas');
+      c.width = nw;
+      c.height = nh;
+      const ctx = c.getContext('2d');
 
-    const chip=document.createElement('div'); chip.className='result-chip'; chip.appendChild(th);
-    const footer=document.createElement('div'); footer.className='result-chip-footer';
-    footer.innerHTML=`<span>${name}<br>${nw}×${nh}px</span>`;
-    const dl=document.createElement('a');
-    dl.textContent='PNG';
-    dl.href=c.toDataURL('image/png');
-    dl.download=name+'.png';
-    footer.appendChild(dl); chip.appendChild(footer); results.appendChild(chip);
+      if (bgImage) {
+        const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
+        const vyPct = +(document.getElementById('bg-vy')?.value || 50) / 100;
+        const iw = bgImage.naturalWidth, ih = bgImage.naturalHeight;
+        const canvasToImg = iw / (TOTAL_W * scalePct);
+        const sx = logicalOffsets[i] * canvasToImg;
+        const sw = lw * canvasToImg;
+        const scaledImgH = ih / canvasToImg;
+        const overflowH = Math.max(0, scaledImgH - H);
+        const sy = Math.max(0, Math.min(ih - H * canvasToImg, overflowH * vyPct * canvasToImg));
+        const sh = Math.min(ih - sy, H * canvasToImg);
+        ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, nw, nh);
+      } else {
+        ctx.fillStyle = '#e8e8ed';
+        ctx.fillRect(0, 0, nw, nh);
+      }
+
+      ctx.save();
+      ctx.scale(nativeRatio, nativeRatio);
+      if (i !== 1) drawLateral(ctx, lw, H, zones[i]);
+      else drawCenter(ctx, lw, H);
+      ctx.restore();
+
+      imageData.push({
+        name: name + '.png',
+        dataUrl: c.toDataURL('image/png')
+      });
+    });
+
+    if (exportAll) {
+      currentTab = originalTab;
+    }
   });
 
-  document.getElementById('results-section').style.display='block';
-  document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+  // Create ZIP
+  const timestamp = new Date().toISOString().slice(0, 10);
+  const zipFilename = exportAll 
+    ? `MonteHoreb_todas_${timestamp}.zip`
+    : `MonteHoreb_${currentTab}_${timestamp}.zip`;
+
+  try {
+    const zipBlob = await createZipFileBlob(imageData);
+    
+    // Trigger browser download
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = zipFilename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    setTimeout(() => {
+      results.innerHTML = `
+        <div class="download-confirmation">
+          <div class="download-confirmation-icon">✅</div>
+          <div class="download-confirmation-content">
+            <div class="download-confirmation-title">Descarga completada</div>
+            <div class="download-confirmation-subtitle">
+              Se descargó: <strong>${zipFilename}</strong><br>
+              ${imageData.length} ${imageData.length === 1 ? 'imagen' : 'imágenes'} comprimidas en tu carpeta Descargas
+            </div>
+            <div class="download-confirmation-actions">
+              <button onclick="showExportModal()">↓ Descargar más</button>
+              <button onclick="document.getElementById('results').innerHTML=''">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }, 500);
+  } catch (err) {
+    results.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--red);"><p>❌ Error: ${err.message}</p></div>`;
+  }
+}
+
+async function exportImagesAsZip(exportAll) {
+  let imageConfigs = [];
+  
+  if (exportAll) {
+    imageConfigs.push(
+      { tab: 'versiculo', names: ['lateral_izq', 'versiculo', 'lateral_der'] },
+      { tab: 'logo', names: ['lat_logo_izq', 'logo_central', 'lat_logo_der'] }
+    );
+  } else {
+    const isV = currentTab === 'versiculo';
+    const names = isV ? ['lateral_izq', 'versiculo', 'lateral_der'] : ['lat_logo_izq', 'logo_central', 'lat_logo_der'];
+    imageConfigs.push({ tab: currentTab, names: names });
+  }
+
+  const results = document.getElementById('results');
+  results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--muted);"><p>⏳ Preparando descarga...</p></div>';
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+
+  // Request folder
+  const dirHandle = await getDownloadDirectory();
+  if (!dirHandle) {
+    results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--red);"><p>❌ Descarga cancelada</p></div>';
+    return;
+  }
+
+  const logicalWidths = [LAT_W, CENTER_W, LAT_W];
+  const logicalOffsets = [0, LAT_W, LAT_W + CENTER_W];
+  const zones = ['li', 'ce', 'ld'];
+  const nativeRatio = bgImage ? Math.min(4, bgImage.naturalWidth / TOTAL_W) : 1;
+
+  const imageData = [];
+
+  imageConfigs.forEach(config => {
+    const originalTab = currentTab;
+    if (exportAll) {
+      currentTab = config.tab;
+    }
+
+    config.names.forEach((name, i) => {
+      const lw = logicalWidths[i];
+      const nw = Math.round(lw * nativeRatio);
+      const nh = Math.round(H * nativeRatio);
+
+      const c = document.createElement('canvas');
+      c.width = nw;
+      c.height = nh;
+      const ctx = c.getContext('2d');
+
+      if (bgImage) {
+        const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
+        const vyPct = +(document.getElementById('bg-vy')?.value || 50) / 100;
+        const iw = bgImage.naturalWidth, ih = bgImage.naturalHeight;
+        const canvasToImg = iw / (TOTAL_W * scalePct);
+        const sx = logicalOffsets[i] * canvasToImg;
+        const sw = lw * canvasToImg;
+        const scaledImgH = ih / canvasToImg;
+        const overflowH = Math.max(0, scaledImgH - H);
+        const sy = Math.max(0, Math.min(ih - H * canvasToImg, overflowH * vyPct * canvasToImg));
+        const sh = Math.min(ih - sy, H * canvasToImg);
+        ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, nw, nh);
+      } else {
+        ctx.fillStyle = '#e8e8ed';
+        ctx.fillRect(0, 0, nw, nh);
+      }
+
+      ctx.save();
+      ctx.scale(nativeRatio, nativeRatio);
+      if (i !== 1) drawLateral(ctx, lw, H, zones[i]);
+      else drawCenter(ctx, lw, H);
+      ctx.restore();
+
+      imageData.push({
+        name: name + '.png',
+        dataUrl: c.toDataURL('image/png')
+      });
+    });
+
+    if (exportAll) {
+      currentTab = originalTab;
+    }
+  });
+
+  // Create ZIP
+  const timestamp = new Date().toISOString().slice(0, 10);
+  const zipFilename = exportAll 
+    ? `MonteHoreb_todas_${timestamp}.zip`
+    : `MonteHoreb_${currentTab}_${timestamp}.zip`;
+
+  const zipBlob = await createZipFileBlob(imageData);
+
+  // Save ZIP to selected folder
+  try {
+    const fileHandle = await dirHandle.getFileHandle(zipFilename, { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(zipBlob);
+    await writable.close();
+
+    setTimeout(() => {
+      results.innerHTML = `
+        <div class="download-confirmation">
+          <div class="download-confirmation-icon">✅</div>
+          <div class="download-confirmation-content">
+            <div class="download-confirmation-title">Descarga completada</div>
+            <div class="download-confirmation-subtitle">
+              Se guardó: <strong>${zipFilename}</strong><br>
+              ${imageData.length} ${imageData.length === 1 ? 'imagen' : 'imágenes'} comprimidas
+            </div>
+            <div class="download-confirmation-actions">
+              <button onclick="showExportModal()">↓ Descargar más</button>
+              <button onclick="document.getElementById('results').innerHTML=''">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }, 500);
+  } catch (err) {
+    results.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--red);"><p>❌ Error al guardar: ${err.message}</p></div>`;
+  }
+}
+
+async function exportImagesIndividual(exportAll) {
+  let imageConfigs = [];
+  
+  if (exportAll) {
+    imageConfigs.push(
+      { tab: 'versiculo', names: ['lateral_izq', 'versiculo', 'lateral_der'] },
+      { tab: 'logo', names: ['lat_logo_izq', 'logo_central', 'lat_logo_der'] }
+    );
+  } else {
+    const isV = currentTab === 'versiculo';
+    const names = isV ? ['lateral_izq', 'versiculo', 'lateral_der'] : ['lat_logo_izq', 'logo_central', 'lat_logo_der'];
+    imageConfigs.push({ tab: currentTab, names: names });
+  }
+
+  const results = document.getElementById('results');
+  results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--muted);"><p>⏳ Preparando descarga...</p></div>';
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+
+  // Request folder
+  const dirHandle = await getDownloadDirectory();
+  if (!dirHandle) {
+    results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--red);"><p>❌ Descarga cancelada</p></div>';
+    return;
+  }
+
+  const logicalWidths = [LAT_W, CENTER_W, LAT_W];
+  const logicalOffsets = [0, LAT_W, LAT_W + CENTER_W];
+  const zones = ['li', 'ce', 'ld'];
+  const nativeRatio = bgImage ? Math.min(4, bgImage.naturalWidth / TOTAL_W) : 1;
+
+  let successCount = 0;
+  let totalCount = 0;
+  let fileList = [];
+
+  imageConfigs.forEach(config => {
+    const originalTab = currentTab;
+    if (exportAll) {
+      currentTab = config.tab;
+    }
+
+    config.names.forEach(async (name, i) => {
+      totalCount++;
+      const lw = logicalWidths[i];
+      const nw = Math.round(lw * nativeRatio);
+      const nh = Math.round(H * nativeRatio);
+
+      const c = document.createElement('canvas');
+      c.width = nw;
+      c.height = nh;
+      const ctx = c.getContext('2d');
+
+      if (bgImage) {
+        const scalePct = +(document.getElementById('bg-scale')?.value || 100) / 100;
+        const vyPct = +(document.getElementById('bg-vy')?.value || 50) / 100;
+        const iw = bgImage.naturalWidth, ih = bgImage.naturalHeight;
+        const canvasToImg = iw / (TOTAL_W * scalePct);
+        const sx = logicalOffsets[i] * canvasToImg;
+        const sw = lw * canvasToImg;
+        const scaledImgH = ih / canvasToImg;
+        const overflowH = Math.max(0, scaledImgH - H);
+        const sy = Math.max(0, Math.min(ih - H * canvasToImg, overflowH * vyPct * canvasToImg));
+        const sh = Math.min(ih - sy, H * canvasToImg);
+        ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, nw, nh);
+      } else {
+        ctx.fillStyle = '#e8e8ed';
+        ctx.fillRect(0, 0, nw, nh);
+      }
+
+      ctx.save();
+      ctx.scale(nativeRatio, nativeRatio);
+      if (i !== 1) drawLateral(ctx, lw, H, zones[i]);
+      else drawCenter(ctx, lw, H);
+      ctx.restore();
+
+      // Convert canvas to blob
+      c.toBlob(async (blob) => {
+        try {
+          const filename = name + '.png';
+          const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          
+          successCount++;
+          fileList.push(filename);
+          
+          if (successCount === totalCount) {
+            results.innerHTML = `
+              <div class="download-confirmation">
+                <div class="download-confirmation-icon">✅</div>
+                <div class="download-confirmation-content">
+                  <div class="download-confirmation-title">Descargas completadas</div>
+                  <div class="download-confirmation-subtitle">
+                    Se guardaron ${successCount} ${successCount === 1 ? 'imagen' : 'imágenes'} correctamente
+                  </div>
+                  <div class="download-confirmation-actions">
+                    <button onclick="showExportModal()">↓ Descargar más</button>
+                    <button onclick="document.getElementById('results').innerHTML=''">Cerrar</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        } catch (err) {
+          results.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--red);"><p>❌ Error al guardar: ${err.message}</p></div>`;
+        }
+      });
+    });
+
+    if (exportAll) {
+      currentTab = originalTab;
+    }
+  });
+}
+
+// Legacy function for backward compatibility
+function exportAll(){
+  showExportModal();
 }
 </script>
+
+<!-- Export Modal -->
+<div id="export-modal-overlay" class="export-modal-overlay">
+  <div class="export-modal">
+    <h2>Descargar Imágenes</h2>
+    <p>Elige cómo deseas descargar y dónde guardar:</p>
+    
+    <div class="export-options">
+      <div style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding: 0 2px;">📱 Descarga rápida (Descargas)</div>
+      
+      <div class="export-option" onclick="handleExport('current-zip-downloads')">
+        <strong>📦 Tab Actual (ZIP)</strong>
+        <span>3 imágenes comprimidas directamente a tu carpeta Descargas</span>
+      </div>
+      
+      <div class="export-option" onclick="handleExport('all-zip-downloads')">
+        <strong>📦 Todas (ZIP)</strong>
+        <span>6 imágenes comprimidas directamente a tu carpeta Descargas</span>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 2px 8px; padding: 0 2px;">📁 Elige carpeta</div>
+      
+      <div class="export-option" onclick="handleExport('current-individual')">
+        <strong>📄 Tab Actual (Individual)</strong>
+        <span>3 imágenes por separado en una carpeta que elijas</span>
+      </div>
+      
+      <div class="export-option" onclick="handleExport('all-individual')">
+        <strong>📄 Todas (Individual)</strong>
+        <span>6 imágenes por separado en una carpeta que elijas</span>
+      </div>
+    </div>
+    
+    <div class="export-buttons">
+      <button class="export-btn secondary" onclick="closeExportModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
